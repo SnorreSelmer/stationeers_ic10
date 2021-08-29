@@ -1,54 +1,53 @@
 # automatic gas-canister filler.
 # only works with player-made cans, starter-cans
 # have different hashes that won't work
-# !!! Remember to set volume pump to no more !!!
-# !!! than 10l! I have mine at 2l for safety !!! 
+# !!! Remember to set volume pump to 10l !!! 
 
-alias canister_storage d0
+alias tank_storage d0
 alias fill_pump d1
 alias evac_pump d2
-alias analyzer d4
+alias analyzer d3
 
-alias canister_present r0
-alias canister_hash r1
+alias tank_present r0
+alias tank_hash r1
 alias storage_pressure r2
 alias gas_to_move r3
 alias fill_pressure r4
 alias pump_active r5
 
-define canister 42280099
-define smart_canister -668314371
+define canister_hash 42280099
+define smart_canister_hash -668314371
 
 start:
 # check if canister is present
-ls canister_present canister_storage 0 Occupied
+ls tank_present tank_storage 0 Occupied
 # identify canister
-ls canister_hash canister_storage 0 OccupantHash
+ls tank_hash tank_storage 0 OccupantHash
 # set safe fill-pressure
-beq canister_hash canister regular
-beq canister_hash smart_canister smart
+beq tank_hash canister_hash regular
+beq tank_hash smart_canister_hash smart
 
 regular:
-move fill_pressure 8000000 # regular can safe max
+move fill_pressure 8000000 # regular tank safe max
 j fill # start filling
 
 smart:
-move fill_pressure 18000000 # smart can safe max
+move fill_pressure 18000000 # smart tank safe max
 j fill # start filling
 
-fill: # fills canister if present and <8Mpa
-# get canister pressure in Pa
-ls storage_pressure canister_storage 0 Pressure
-# is there room in the canister for more gas?
+fill: # fills tank if present and has room
+# get tank pressure in Pa
+ls storage_pressure tank_storage 0 Pressure
+# is there room in the tank for more gas?
 slt gas_to_move storage_pressure fill_pressure
-# is there a can in the slot that has room?
-and pump_active gas_to_move canister_present
+# is there a tank in the slot that has room?
+and pump_active gas_to_move tank_present
 # trigger fill pump
 s fill_pump On pump_active
-beqz canister_present evac# break if no can
+beqz tank_present evac # break if no tank
 j start
 
-evac: # evacuates pipe on can removed and >0Pa
+evac: # evacuates pipe on tank removed and >0Pa
 l storage_pressure analyzer Pressure
 # is there gas in the pipe?
 sgt gas_to_move storage_pressure 0
