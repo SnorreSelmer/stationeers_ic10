@@ -1,0 +1,46 @@
+# automatic gas-canister filler.
+# only works with player-made cans, starter-cans
+# have different hashes that won't work
+# !!! Remember to set volume pump to no more !!!
+# !!! than 10l! I have mine at 2l for safety !!! 
+
+alias canister_storage d0
+alias volume_pump d1
+
+alias canister_present r0
+alias canister_hash r1
+alias canister_pressure r2
+alias canister_hasroom r3
+alias fill_pressure r4
+alias pump_active r5
+
+define canister 42280099
+define smart_canister -668314371
+
+start:
+# check if canister is present
+ls canister_present canister_storage 0 Occupied
+# identify canister
+ls canister_hash canister_storage 0 OccupantHash
+# set safe fill-pressure
+beq canister_hash canister regular
+beq canister_hash smart_canister smart
+
+regular:
+move fill_pressure 8000000 # regular can safe max
+j fill # start filling
+
+smart:
+move fill_pressure 1400000 # smart can safe max
+j fill # start filling
+
+fill:
+# get canister pressure in Pa
+ls canister_pressure canister_storage 0 Pressure
+# is there room in the canister for more gas?
+slt canister_hasroom canister_pressure fill_pressure
+# is there a can in the slot that has room?
+and pump_active canister_hasroom canister_present
+# trigger volume pump
+s volume_pump On pump_active
+j start
