@@ -1,6 +1,6 @@
 alias gas_sensor d0
-alias thermostat d1  # Logic Switch, variant 
-alias temp_variance d2  # Logic Memory
+alias thermostat d1  # Logic Switch, Dial variant (Max=30)
+alias temp_variance d2  # Logic Memory, must be more than 0 (2 is a good value)
 alias curr_temp r0
 alias target_temp r1
 alias variance r2
@@ -43,6 +43,8 @@ cooling:
 # read ambient temp from sensor and convert to C
 l curr_temp gas_sensor Temperature
 sub curr_temp curr_temp temp_convert
+
+# test if coolers need to be on or not
 sgt cooling_active curr_temp target_temp
 
 # send state to coolers
@@ -60,6 +62,8 @@ heating:
 # read ambient temp from sensor and convert to C
 l curr_temp gas_sensor Temperature
 sub curr_temp curr_temp temp_convert
+
+# test if heaters need to be on or not
 slt heating_active curr_temp target_temp
 
 # send state to heaters
