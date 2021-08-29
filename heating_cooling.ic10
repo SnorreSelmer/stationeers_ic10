@@ -1,0 +1,73 @@
+alias gas_sensor d0
+alias thermostat d1  # Logic Switch, variant 
+alias temp_variance d2  # Logic Memory
+alias curr_temp r0
+alias target_temp r1
+alias variance r2
+alias min_temp r3
+alias max_temp r4
+alias cooling_active r5
+alias heating_active r6
+
+define wall_heaters 24258244  # Wall Heaters
+define wall_coolers -739292323  # Wall Coolers (Gas)
+define liquid_wall_coolers -1369060582  # Wall Coolers (Liquid)
+define temp_convert 273
+
+start:
+# establish min- and max-temps to registry
+l variance temp_variance Setting
+l min_temp thermostat Setting
+sub min_temp min_temp variance
+l max_temp thermostat Setting
+add max_temp max_temp variance
+
+# initiate target temperature
+l target_temp thermostat Setting
+
+# read ambient temp from sensor and convert to C
+l curr_temp gas_sensor Temperature
+sub curr_temp curr_temp temp_convert
+
+# compare current temp to max/min temp and
+# initiate cooling or heating if needed
+bgt curr_temp max_temp cooling
+blt curr_temp min_temp heating
+
+yield
+
+# Go to start again
+j start
+
+cooling:
+# read ambient temp from sensor and convert to C
+l curr_temp gas_sensor Temperature
+sub curr_temp curr_temp temp_convert
+sgt cooling_active curr_temp target_temp
+
+# send state to coolers
+sb wall_coolers On cooling_active
+sb liquid_wall_coolers On cooling_active
+yield
+
+# if curr_temp is lower than target, keep cooling
+bgt curr_temp target_temp cooling
+
+# ...if not, go to start again
+j start
+
+heating:
+# read ambient temp from sensor and convert to C
+l curr_temp gas_sensor Temperature
+sub curr_temp curr_temp temp_convert
+slt heating_active curr_temp target_temp
+
+# send state to heaters
+sb wall_heaters On heating_active
+yield
+
+# if curr_temp is lower than target, keep heating
+blt curr_temp target_temp heating
+
+# ...if not, go to start again
+j start

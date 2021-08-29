@@ -1,0 +1,4 @@
+# check canister type in tank storage
+# set target pressure accordingly
+# run volume pump until target pressure in canister is reached
+# stop volume pump
