@@ -1,6 +1,7 @@
-# automatic gas-canister filler.
-# only works with player-made cans, starter-cans
-# have different hashes that won't work
+# needs two volume pumps and a pipe analyzer
+# fill_pump points to the tank storage
+# evac_pump points back to the gas-feed
+# analyzer is on a pipe between punps and tank
 # !!! Remember to set volume pump to 10l !!! 
 
 alias tank_storage d0
