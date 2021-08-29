@@ -1,0 +1,32 @@
+# This code assumes the following:
+# Daylight Sensor data-port points north
+# Solar Panel data-port points east
+
+alias sensor d0
+alias v_angle r0
+alias h_angle r1
+
+define sunrise -90
+define solar_panel_hash -539224550
+define heavy_solar_panel_hash -1545574413
+
+start:
+# Calculate vertical angle
+l v_angle sensor Vertical
+div v_angle v_angle 1.5
+sub v_angle 50 v_angle
+
+# Write vertical angle to all solar panels
+sb solar_panel_hash Vertical v_angle
+sb heavy_solar_panel_hash Vertical v_angle
+
+# Obtain horizontal angle
+l h_angle sensor Horizontal
+
+# Write vertical angle to all solar panels
+sb solar_panel_hash Horizontal h_angle
+sb heavy_solar_panel_hash Horizontal h_angle
+
+# Go to start again
+yield
+j start
