@@ -19,19 +19,19 @@ define canister_hash 42280099
 define smart_canister_hash -668314371
 
 start:
+s evac_pump On 0 # stop evac_pump
+s fill_pump On 0 # stop fill_pump
 ls tank_in tank_stor 0 Occupied # check tank in
-
 beqz tank_in evac
 bgtz tank_in setpress
 
 evac:
+ls tank_in tank_stor 0 Occupied # check tank in
+bgtz tank_in start
 l stor_press analyzer Pressure # get pipe pressure
-s evac_pump On 1 # run evac_pump
-s fill_pump On 0 # stop fill_pump
-bgtz stor_press evac # pressure >0, evac more
-# else, shut off evac_pump and go to start
-s evac_pump On 0
-j start
+beqz stor_press start # pressure =0, stop evac
+s evac_pump On 1
+j evac
 
 setpress:
 ls tank_hash tank_stor 0 OccupantHash # ident tank
@@ -48,7 +48,10 @@ move fill_press 18000000 # smart tank safe max
 j fill # start filling
 
 fill:
+ls tank_in tank_stor 0 Occupied # check tank in
+beqz tank_in start
 ls stor_press tank_stor 0 Pressure # get tank press
 slt gas_move stor_press fill_press # room for more?
+bltz gas_move start # tank is full, go to start
 s fill_pump On gas_move # trigger fill pump
-j start
+j fill
