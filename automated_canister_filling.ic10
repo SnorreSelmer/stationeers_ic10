@@ -4,54 +4,51 @@
 # analyzer is on a pipe between punps and tank
 # !!! Remember to set volume pump to 10l !!! 
 
-alias tank_storage d0
+alias tank_stor d0
 alias fill_pump d1
 alias evac_pump d2
 alias analyzer d3
 
-alias tank_present r0
+alias tank_in r0
 alias tank_hash r1
-alias storage_pressure r2
-alias gas_to_move r3
-alias fill_pressure r4
-alias pump_active r5
+alias stor_press r2
+alias gas_move r3
+alias fill_press r4
 
 define canister_hash 42280099
 define smart_canister_hash -668314371
 
 start:
-# check if canister is present
-ls tank_present tank_storage 0 Occupied
-# identify canister
-ls tank_hash tank_storage 0 OccupantHash
+ls tank_in tank_stor 0 Occupied # check tank in
+
+beqz tank_in evac
+bgtz tank_in setpress
+
+evac:
+l stor_press analyzer Pressure # get pipe pressure
+s evac_pump On 1 # run evac_pump
+s fill_pump On 0 # stop fill_pump
+bgtz stor_press evac # pressure >0, evac more
+# else, shut off evac_pump and go to start
+s evac_pump On 0
+j start
+
+setpress:
+ls tank_hash tank_stor 0 OccupantHash # ident tank
 # set safe fill-pressure
 beq tank_hash canister_hash regular
 beq tank_hash smart_canister_hash smart
 
 regular:
-move fill_pressure 8000000 # regular tank safe max
+move fill_press 8000000 # regular tank safe max
 j fill # start filling
 
 smart:
-move fill_pressure 18000000 # smart tank safe max
+move fill_press 18000000 # smart tank safe max
 j fill # start filling
 
-fill: # fills tank if present and has room
-# get tank pressure in Pa
-ls storage_pressure tank_storage 0 Pressure
-# is there room in the tank for more gas?
-slt gas_to_move storage_pressure fill_pressure
-# is there a tank in the slot that has room?
-and pump_active gas_to_move tank_present
-# trigger fill pump
-s fill_pump On pump_active
-beqz tank_present evac # break if no tank
-j start
-
-evac: # evacuates pipe on tank removed and >0Pa
-l storage_pressure analyzer Pressure
-# is there gas in the pipe?
-sgt gas_to_move storage_pressure 0
-# trigger evac pump
-s evac_pump On gas_to_move
+fill:
+ls stor_press tank_stor 0 Pressure # get tank press
+slt gas_move stor_press fill_press # room for more?
+s fill_pump On gas_move # trigger fill pump
 j start
