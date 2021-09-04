@@ -17,13 +17,14 @@ s announcer Mode 18 # "Storm Incoming!"
 s siren Mode 10 # nice siren sound
 
 start:
+yield
 l storm_mode weather Mode # check weather
 s announcer On 0 # reset announcer
-yield
 beq storm_mode 1 countdown # countdown if incoming
 j start # else return to start
 
 countdown:
+yield
 l storm_mode weather Mode # check weather
 s announcer On 1 # announce storm
 # get countdown value
@@ -38,6 +39,5 @@ sgt siren_high minutes 2 # got more than 2m59s?
 slt siren_low minutes 1 # got less than 60s?
 nor siren_on siren_high siren_low # sound siren?
 s siren On siren_on # start siren if 1<minutes<3
-yield
 beq storm_mode 1 countdown # still waiting? go back
 j start # reset and start waiting again
