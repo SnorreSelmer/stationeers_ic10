@@ -1,9 +1,17 @@
-alias mud_sensor d0
-alias tank d1
-alias purge_button d2
-alias purge_pump d3
-alias filter_unit d4
-alias filter_display d5
+# Complete filtration circuit that controls filter-
+# unit, checks filters, maintains safe temperature
+# and pressure.
+# 
+# "Mud pipe" is the shared input-pipe for all
+# filtration units, where all gasses are mixed into
+# a "mud" before being filtered.
+
+alias mud_sensor d0 # Pipe Analyzer
+alias tank d1 # Tank
+alias purge_button d2 # Logic (Switch)
+alias purge_pump d3 # Volume (Turbo) Pump
+alias filter_unit d4 # Kit (Atmospherics)
+alias filter_display d5 # Kit (Console)
 
 alias mud_temp r0
 alias mud_press r1
@@ -16,47 +24,48 @@ alias press_run r7
 alias filter_run r8
 alias purge_run r9
 
-define max_press 58000 # 58MPa?
+define max_press 58000 # 58MPa
 define max_temp 313 # 40C
 
-s purge_pump Setting 100 # Max throughput
-s filter_display Color 4 # Red
+l filter1 purge_pump Maximum # borrow filter1
+s purge_pump Setting filter1 # set max throughput
+s filter_display Color 4 # red
 
 start:
 yield
-s purge_pump On 0
-ls filter1 filter_unit 0 Quantity
-ls filter2 filter_unit 1 Quantity
-beqz filter1 swap_filter_1
-beqz filter2 swap_filter_2
-s filter_display On 0
-l purge_run purge_button  Setting
-bgtz purge_run purge
-j filter
+s purge_pump On 0 # ensure pump is off
+ls filter1 filter_unit 0 Quantity # check r-filter
+ls filter2 filter_unit 1 Quantity # check l-filter
+beqz filter1 swap_filter_1 # right filter spent
+beqz filter2 swap_filter_2 # left filter spent
+s filter_display On 0 # turn off filter display
+l purge_run purge_button Setting # check purge
+bgtz purge_run purge # run purge if triggered
+j filter # or start filtering
 
-swap_filter_1:
+swap_filter_1: # if right filter needs swapping
 s filter_display Setting 1
 s filter_display On 1
-j filter
+j filter # then start filtering
 
-swap_filter_2:
+swap_filter_2: # if left filter needs swapping
 s filter_display Setting 2
 s filter_display On 1
-j filter
+j filter # then start filtering
 
 filter:
-l mud_temp mud_sensor Temperature
-l tank_press tank Pressure
-slt temp_run mud_temp max_temp
-slt press_run tank_press max_press
-and filter_run temp_run press_run
-s filter_unit On filter_run 
-j start
+l mud_temp mud_sensor Temperature # get input temp
+l tank_press tank Pressure # get output pressure
+slt temp_run mud_temp max_temp # is temp safe
+slt press_run tank_press max_press # is press safe
+and filter_run temp_run press_run # temp and press?
+s filter_unit On filter_run # run filter
+j start # loop
 
-purge:
+purge: # purge button pressed
 yield
-s filter_unit On 0
-l tank_press tank Pressure
-s purge_pump On 1
-bgtz tank_press purge
-j start
+s filter_unit On 0 # stop filtering
+l tank_press tank Pressure # check pressure
+s purge_pump On 1 # run evac-pump
+bgtz tank_press purge # keep sucking until tank dry
+j start # begin filtering
