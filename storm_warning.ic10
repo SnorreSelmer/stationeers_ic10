@@ -17,12 +17,14 @@ s announcer Mode 18 # "Storm Incoming!"
 s siren Mode 10 # nice siren sound
 
 start:
+yield
 l storm_mode weather Mode # check weather
 s announcer On 0 # reset announcer
 beq storm_mode 1 countdown # countdown if incoming
 j start # else return to start
 
 countdown:
+yield
 l storm_mode weather Mode # check weather
 s announcer On 1 # announce storm
 # get countdown value
