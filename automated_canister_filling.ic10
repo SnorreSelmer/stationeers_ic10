@@ -20,6 +20,7 @@ define canister 42280099
 define smart_canister -668314371
 
 start:
+yield
 # check if canister is present
 ls canister_present canister_storage 0 Occupied
 # identify canister
