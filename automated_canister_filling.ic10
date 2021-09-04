@@ -55,4 +55,5 @@ l storage_pressure analyzer Pressure
 sgt gas_to_move storage_pressure 0
 # trigger evac pump
 s evac_pump On gas_to_move
+bgtz gas_to_move evac
 j start
