@@ -1,57 +1,58 @@
-# needs two volume pumps and a pipe analyzer
-# fill_pump points to the tank storage
-# evac_pump points back to the gas-feed
-# analyzer is on a pipe between punps and tank
-# !!! Remember to set volume pump to 10l !!! 
+# automatic gas-canister filler.
+# only works with player-made cans, starter-cans
+# have different hashes that won't work
+# !!! Remember to set volume pump to no more !!!
+# !!! than 10l! I have mine at 2l for safety !!! 
 
-alias tank_stor d0
+alias canister_storage d0
 alias fill_pump d1
 alias evac_pump d2
-alias analyzer d3
+alias analyzer d4
 
-alias tank_in r0
-alias tank_hash r1
-alias stor_press r2
-alias gas_move r3
-alias fill_press r4
+alias canister_present r0
+alias canister_hash r1
+alias storage_pressure r2
+alias gas_to_move r3
+alias fill_pressure r4
+alias pump_active r5
 
-define canister_hash 42280099
-define smart_canister_hash -668314371
+define canister 42280099
+define smart_canister -668314371
 
 start:
-s evac_pump On 0 # stop evac_pump
-s fill_pump On 0 # stop fill_pump
-ls tank_in tank_stor 0 Occupied # check tank in
-beqz tank_in evac
-bgtz tank_in setpress
-
-evac:
-ls tank_in tank_stor 0 Occupied # check tank in
-bgtz tank_in start
-l stor_press analyzer Pressure # get pipe pressure
-beqz stor_press start # pressure =0, stop evac
-s evac_pump On 1
-j evac
-
-setpress:
-ls tank_hash tank_stor 0 OccupantHash # ident tank
+yield
+# check if canister is present
+ls canister_present canister_storage 0 Occupied
+# identify canister
+ls canister_hash canister_storage 0 OccupantHash
 # set safe fill-pressure
-beq tank_hash canister_hash regular
-beq tank_hash smart_canister_hash smart
+beq canister_hash canister regular
+beq canister_hash smart_canister smart
 
 regular:
-move fill_press 8000000 # regular tank safe max
+move fill_pressure 8000000 # regular can safe max
 j fill # start filling
 
 smart:
-move fill_press 18000000 # smart tank safe max
+move fill_pressure 18000000 # smart can safe max
 j fill # start filling
 
-fill:
-ls tank_in tank_stor 0 Occupied # check tank in
-beqz tank_in start
-ls stor_press tank_stor 0 Pressure # get tank press
-slt gas_move stor_press fill_press # room for more?
-bltz gas_move start # tank is full, go to start
-s fill_pump On gas_move # trigger fill pump
-j fill
+fill: # fills canister if present and <8Mpa
+# get canister pressure in Pa
+ls storage_pressure canister_storage 0 Pressure
+# is there room in the canister for more gas?
+slt gas_to_move storage_pressure fill_pressure
+# is there a can in the slot that has room?
+and pump_active gas_to_move canister_present
+# trigger fill pump
+s fill_pump On pump_active
+beqz canister_present evac# break if no can
+j start
+
+evac: # evacuates pipe on can removed and >0Pa
+l storage_pressure analyzer Pressure
+# is there gas in the pipe?
+sgt gas_to_move storage_pressure 0
+# trigger evac pump
+s evac_pump On gas_to_move
+j start
