@@ -6,7 +6,6 @@ alias sensor d0
 alias v_angle r0
 alias h_angle r1
 
-define sunrise -90
 define solar_panel_hash -539224550
 define heavy_solar_panel_hash -1545574413
 

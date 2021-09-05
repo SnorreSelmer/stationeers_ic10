@@ -15,6 +15,7 @@ define liquid_wall_coolers -1369060582  # Wall Coolers (Liquid)
 define temp_convert 273
 
 start:
+yield
 # establish min- and max-temps to registry
 l variance temp_variance Setting
 l min_temp thermostat Setting
@@ -34,12 +35,11 @@ sub curr_temp curr_temp temp_convert
 bgt curr_temp max_temp cooling
 blt curr_temp min_temp heating
 
-yield
-
 # Go to start again
 j start
 
 cooling:
+yield
 # read ambient temp from sensor and convert to C
 l curr_temp gas_sensor Temperature
 sub curr_temp curr_temp temp_convert
@@ -50,15 +50,15 @@ sgt cooling_active curr_temp target_temp
 # send state to coolers
 sb wall_coolers On cooling_active
 sb liquid_wall_coolers On cooling_active
-yield
 
-# if curr_temp is lower than target, keep cooling
+# if curr_temp is higher than target, keep cooling
 bgt curr_temp target_temp cooling
 
 # ...if not, go to start again
 j start
 
 heating:
+yield
 # read ambient temp from sensor and convert to C
 l curr_temp gas_sensor Temperature
 sub curr_temp curr_temp temp_convert
@@ -68,7 +68,6 @@ slt heating_active curr_temp target_temp
 
 # send state to heaters
 sb wall_heaters On heating_active
-yield
 
 # if curr_temp is lower than target, keep heating
 blt curr_temp target_temp heating
