@@ -14,15 +14,14 @@ alias filter_unit d4 # Kit (Atmospherics)
 alias filter_display d5 # Kit (Console)
 
 alias mud_temp r0
-alias mud_press r1
-alias filter1 r2
-alias filter2 r3
-alias tank_press r4
-alias button r5
-alias temp_run r6
-alias press_run r7
-alias filter_run r8
-alias purge_run r9
+alias filter1 r1
+alias filter2 r2
+alias tank_press r3
+alias button r4
+alias temp_run r5
+alias press_run r6
+alias filter_run r7
+alias purge_run r8
 
 define max_press 58000 # 58MPa
 define max_temp 313 # 40C
