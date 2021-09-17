@@ -1,0 +1,32 @@
+# Automatically evacuates cooling-tower when temp
+# is below 40C (39.85C)
+# needs a volume pump and a gas analyzer
+
+alias sensor d0
+alias pump d1
+
+alias pipe_temp r0
+alias pipe_press r1
+alias temp_go r2
+alias press_go r3
+alias pump_go r4
+
+define temp_thresh 313 # 39.85C
+
+# Sets volume pump max capacity
+l pipe_press pump Maximum
+s pump Setting pipe_press
+
+start:
+yield
+# Loads cooling-tower pressure and temp
+l pipe_temp sensor Temperature
+l pipe_press sensor Pressure
+# Checks if temp is below threshold
+slt temp_go pipe_temp temp_thresh
+sgtz press_go pipe_press
+# If cooling-tower has pressure, and temp is safe..
+and pump_go temp_go press_go
+# ...activate pump
+s pump On pump_go
+j start
