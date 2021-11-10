@@ -31,9 +31,7 @@ add max_temp max_temp variance
 # initiate target temperature
 l target_temp thermostat Setting
 
-# read ambient temp from sensor and convert to C
-l curr_temp gas_sensor Temperature
-sub curr_temp curr_temp temp_convert
+jal temp_read
 
 # update display
 brdns temp_disp 2
@@ -44,7 +42,17 @@ jal display
 bgt curr_temp max_temp cooling
 blt curr_temp min_temp heating
 
+sb wall_coolers On cooling_active
+sb liquid_wall_coolers On cooling_active
+sb wall_heaters On heating_active
+
 j start
+
+temp_read:
+l curr_temp gas_sensor Temperature
+sub curr_temp curr_temp temp_convert
+
+j ra
 
 display:
 s temp_disp Setting curr_temp
@@ -52,6 +60,8 @@ s temp_disp Setting curr_temp
 j ra
 
 cooling:
+jal temp_read
+
 # test if coolers need to be on or not
 sgt cooling_active curr_temp target_temp
 
@@ -68,6 +78,8 @@ bgtz cooling_active cooling
 j start
 
 heating:
+jal temp_read
+
 # test if heaters need to be on or not
 slt heating_active curr_temp target_temp
 
