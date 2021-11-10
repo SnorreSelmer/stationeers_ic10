@@ -1,6 +1,11 @@
 alias gas_sensor d0
-alias thermostat d1  # Logic Switch, Dial variant (Max=30)
-alias temp_variance d2  # Logic Memory, must be more than 0 (2 is a good value)
+# d1= Logic Switch, Dial variant (Max=30)
+alias thermostat d1
+# d2 = Logic Memory, must be more than 0
+alias temp_variance d2
+# d3 = Console, LED Display variant, optional
+alias temp_disp d3
+
 alias curr_temp r0
 alias target_temp r1
 alias variance r2
@@ -9,10 +14,10 @@ alias max_temp r4
 alias cooling_active r5
 alias heating_active r6
 
-define wall_heaters 24258244  # Wall Heaters
-define wall_coolers -739292323  # Wall Coolers (Gas)
-define liquid_wall_coolers -1369060582  # Wall Coolers (Liquid)
-define temp_convert 273
+define wall_heaters 24258244 
+define wall_coolers -739292323
+define liquid_wall_coolers -1369060582
+define temp_convert 273.15
 
 start:
 yield
@@ -30,47 +35,49 @@ l target_temp thermostat Setting
 l curr_temp gas_sensor Temperature
 sub curr_temp curr_temp temp_convert
 
+# update display
+brdns temp_disp 2
+jal display
+
 # compare current temp to max/min temp and
 # initiate cooling or heating if needed
 bgt curr_temp max_temp cooling
 blt curr_temp min_temp heating
 
-# Go to start again
 j start
 
-cooling:
-yield
-# read ambient temp from sensor and convert to C
-l curr_temp gas_sensor Temperature
-sub curr_temp curr_temp temp_convert
+display:
+s temp_disp Setting curr_temp
 
+j ra
+
+cooling:
 # test if coolers need to be on or not
 sgt cooling_active curr_temp target_temp
+
+# update display
+brdns temp_disp 2
+jal display
 
 # send state to coolers
 sb wall_coolers On cooling_active
 sb liquid_wall_coolers On cooling_active
 
-# if curr_temp is higher than target, keep cooling
-bgt curr_temp target_temp cooling
+bgtz cooling_active cooling
 
-# ...if not, go to start again
 j start
 
 heating:
-yield
-# read ambient temp from sensor and convert to C
-l curr_temp gas_sensor Temperature
-sub curr_temp curr_temp temp_convert
-
 # test if heaters need to be on or not
 slt heating_active curr_temp target_temp
+
+# update display
+brdns temp_disp 2
+jal display
 
 # send state to heaters
 sb wall_heaters On heating_active
 
-# if curr_temp is lower than target, keep heating
-blt curr_temp target_temp heating
+bgtz heating_active heating
 
-# ...if not, go to start again
 j start
