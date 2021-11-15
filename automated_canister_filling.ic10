@@ -16,8 +16,8 @@ alias gas_to_move r3
 alias fill_pressure r4
 alias pump_active r5
 
-define canister 42280099
-define smart_canister -668314371
+define CANISTER 42280099
+define SMART_CANISTER -668314371
 
 start:
 yield
@@ -26,8 +26,8 @@ ls canister_present canister_storage 0 Occupied
 # identify canister
 ls canister_hash canister_storage 0 OccupantHash
 # set safe fill-pressure
-beq canister_hash canister regular
-beq canister_hash smart_canister smart
+beq canister_hash CANISTER regular
+beq canister_hash SMART_CANISTER smart
 
 regular:
 move fill_pressure 8000000 # regular can safe max

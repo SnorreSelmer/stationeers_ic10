@@ -23,8 +23,8 @@ alias press_run r6
 alias filter_run r7
 alias purge_run r8
 
-define max_press 58000 # 58MPa
-define max_temp 313 # 40C
+define MAX_PRESS 58000 # 58MPa
+define MAX_TEMP 313 # 40C
 
 l filter1 purge_pump Maximum # borrow filter1
 s purge_pump Setting filter1 # set max throughput
@@ -55,8 +55,8 @@ j filter # then start filtering
 filter:
 l mud_temp mud_sensor Temperature # get input temp
 l tank_press tank Pressure # get output pressure
-slt temp_run mud_temp max_temp # is temp safe
-slt press_run tank_press max_press # is press safe
+slt temp_run mud_temp MAX_TEMP # is temp safe
+slt press_run tank_press MAX_PRESS # is press safe
 and filter_run temp_run press_run # temp and press?
 s filter_unit On filter_run # run filter
 j start # loop
