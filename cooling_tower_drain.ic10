@@ -11,7 +11,7 @@ alias temp_go r2
 alias press_go r3
 alias pump_go r4
 
-define temp_thresh 313 # 39.85C
+define TEMP_THRESH 313 # 39.85C
 
 # Sets volume pump max capacity
 l pipe_press pump Maximum
@@ -23,7 +23,7 @@ yield
 l pipe_temp sensor Temperature
 l pipe_press sensor Pressure
 # Checks if temp is below threshold
-slt temp_go pipe_temp temp_thresh
+slt temp_go pipe_temp TEMP_THRESH
 sgtz press_go pipe_press
 # If cooling-tower has pressure, and temp is safe..
 and pump_go temp_go press_go

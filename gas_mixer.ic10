@@ -20,9 +20,9 @@ alias mixer_run r6
 alias purge_activate r7
 
 # Stops mixing if either input-gas is below 500kPa
-define press_in_min 500
+define PRESS_IN_MIN 500
 # Stops mixing if output-tank is "full"
-define press_out_max 58000
+define PRESS_OUT_MAX 58000
 
 # Sets purge pump to max output
 l tank_a_press pump Maximum
@@ -41,9 +41,9 @@ l tank_b_press tank_b Pressure
 l tank_out_press tank_out Pressure
 
 # Checks if pressures are within tolerances
-sgt tank_a_ok tank_a_press press_in_min
-sgt tank_b_ok tank_b_press press_in_min
-slt tank_out_ok tank_out_press press_out_max
+sgt tank_a_ok tank_a_press PRESS_IN_MIN
+sgt tank_b_ok tank_b_press PRESS_IN_MIN
+slt tank_out_ok tank_out_press PRESS_OUT_MAX
 
 and mixer_run tank_a_ok tank_b_ok
 and mixer_run tank_out_ok mixer_run
