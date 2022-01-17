@@ -18,53 +18,57 @@ alias filter1 r1
 alias filter2 r2
 alias tank_press r3
 alias button r4
-alias temp_run r5
-alias press_run r6
-alias filter_run r7
-alias purge_run r8
+alias filter_run r5
+alias filter_test r6
+alias purge_run r7
+alias has_gas r8
 
 define MAX_PRESS 58000 # 58MPa
 define MAX_TEMP 313 # 40C
 
-l filter1 purge_pump Maximum # borrow filter1
-s purge_pump Setting filter1 # set max throughput
+l r9 purge_pump Maximum
+s purge_pump Setting r9
+
 s filter_display Color 4 # red
 
 start:
 yield
-s purge_pump On 0 # ensure pump is off
-ls filter1 filter_unit 0 Quantity # check r-filter
-ls filter2 filter_unit 1 Quantity # check l-filter
-beqz filter1 swap_filter_1 # right filter spent
-beqz filter2 swap_filter_2 # left filter spent
-s filter_display On 0 # turn off filter display
-l purge_run purge_button Setting # check purge
-bgtz purge_run purge # run purge if triggered
-j filter # or start filtering
+s purge_pump On 0
+ls filter1 filter_unit 0 Quantity
+ls filter2 filter_unit 1 Quantity
+beqz filter1 swap_filter_1
+beqz filter2 swap_filter_2
+s filter_display On 0
+l purge_run purge_button Setting
+bgtz purge_run purge
+j filter
 
 swap_filter_1: # if right filter needs swapping
 s filter_display Setting 1
 s filter_display On 1
-j filter # then start filtering
+j filter # then continue filtering
 
 swap_filter_2: # if left filter needs swapping
 s filter_display Setting 2
 s filter_display On 1
-j filter # then start filtering
+j filter # then continue filtering
 
 filter:
-l mud_temp mud_sensor Temperature # get input temp
-l tank_press tank Pressure # get output pressure
-slt temp_run mud_temp MAX_TEMP # is temp safe
-slt press_run tank_press MAX_PRESS # is press safe
-and filter_run temp_run press_run # temp and press?
-s filter_unit On filter_run # run filter
-j start # loop
+l mud_temp mud_sensor Temperature
+l tank_press tank Pressure
+l has_gas mud_sensor RatioCarbonDioxide
+sgtz has_gas has_gas
+slt filter_run mud_temp MAX_TEMP
+slt filter_test tank_press MAX_PRESS
+and filter_run filter_run filter_test
+and filter_run filter_run has_gas
+s filter_unit On filter_run
+j start
 
-purge: # purge button pressed
+purge:
 yield
-s filter_unit On 0 # stop filtering
-l tank_press tank Pressure # check pressure
-s purge_pump On 1 # run evac-pump
-bgtz tank_press purge # keep sucking until tank dry
-j start # begin filtering
+s filter_unit On 0
+l tank_press tank Pressure
+s purge_pump On 1
+bgtz tank_press purge
+j start
