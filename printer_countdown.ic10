@@ -1,0 +1,23 @@
+alias dial d0
+alias order_display d1
+alias remaining_display d2
+alias printer d3
+
+alias order_count r0
+alias export_count r1
+alias remaining_count r2
+
+move remaining_count 0
+
+start:
+yield
+l order_count dial Setting
+s order_display Setting order_count
+l export_count printer ExportCount
+sub remaining_count order_count export_count
+s remaining_display Setting remaining_count
+bgtz remaining_count start
+s printer ClearMemory 1
+s dial Setting 0
+s printer Activate 0
+j start
