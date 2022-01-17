@@ -5,13 +5,11 @@ alias occupied r0
 alias input_class r1
 alias is_class r2
 alias sorter_counter r3
-alias is_ready r4
 
 move sorter_counter 0
 
 define ITEMCLASS 19 # 10=ores, 19=ingots, 33=wrekage
 define INPUTSLOT 0 # sorter input-slot
-define OUTPUTCYCLE -1
 
 start:
 jal sort
@@ -22,8 +20,6 @@ j start
 sort:
 bdns dr3 ra
 s dr3 Mode 2 # set sorter to IC mode
-l is_ready dr3 Output
-bgt is_ready OUTPUTCYCLE start
 ls occupied dr3 INPUTSLOT Occupied # check if anything to sort
 beqz occupied ra
 ls input_class dr3 INPUTSLOT Class
