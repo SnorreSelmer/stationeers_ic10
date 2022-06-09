@@ -1,0 +1,18 @@
+alias furnace d0
+
+alias import_occupied r0
+alias active r1
+alias run_furnace r2
+
+start:
+yield
+ls import_occupied furnace 0 Occupied
+l active furnace Activate
+xor run_furnace import_occupied active
+bgtz run_furnace run 
+j start
+
+run:
+bgtz active start # already running = go to start
+s furnace Activate 1
+j start
