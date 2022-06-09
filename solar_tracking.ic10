@@ -5,17 +5,17 @@ alias angle_h r1
 alias corr_angle r2
 
 # define directions of sensor and panel power ports
-define sensor_data_angle 0
-define panel_power_angle 90
+define SENSOR_DATA_ANGLE 0
+define PANEL_POWER_ANGLE 90
 
 # define panel hashes
-define basic_1_panel -2045627372
-define basic_2_panel -539224550
-define heavy_1_panel -934345724
-define heavy_2_panel -1545574413
+define BASIC_1_PANEL -2045627372
+define BASIC_2_PANEL -539224550
+define HEAVY_1_PANEL -934345724
+define HEAVY_2_PANEL -1545574413
 
 # calculate horizontal correction
-sub corr_angle sensor_data_angle panel_power_angle
+sub corr_angle SENSOR_DATA_ANGLE PANEL_POWER_ANGLE
 sub corr_angle corr_angle 90
 
 start:
@@ -26,13 +26,13 @@ sub angle_v 90 angle_v
 l angle_h sensor Horizontal
 add angle_h angle_h corr_angle
 
-sb basic_1_panel Vertical angle_v
-sb basic_2_panel Vertical angle_v
-sb heavy_1_panel Vertical angle_v
-sb heavy_2_panel Vertical angle_v
-sb basic_1_panel Horizontal angle_h
-sb basic_2_panel Horizontal angle_h
-sb heavy_1_panel Horizontal angle_h
-sb heavy_2_panel Horizontal angle_h
+sb BASIC_1_PANEL Vertical angle_v
+sb BASIC_2_PANEL Vertical angle_v
+sb HEAVY_1_PANEL Vertical angle_v
+sb HEAVY_2_PANEL Vertical angle_v
+sb BASIC_1_PANEL Horizontal angle_h
+sb BASIC_2_PANEL Horizontal angle_h
+sb HEAVY_1_PANEL Horizontal angle_h
+sb HEAVY_2_PANEL Horizontal angle_h
 
 j start
