@@ -5,6 +5,10 @@ alias thermostat d1
 alias temp_variance d2
 # d3 = Console, LED Display variant, optional
 alias temp_disp d3
+# d4 = Wall Cooler
+alias w_cooler d4
+# d5 = Wall Heater
+alias w_heater d5
 
 alias curr_temp r0
 alias target_temp r1
@@ -13,14 +17,16 @@ alias min_temp r3
 alias max_temp r4
 alias cooling_active r5
 alias heating_active r6
+alias cooler r7
+alias heater r8
 
-define WALL_HEATERS 24258244 
-define WALL_COOLERS -739292323
-define LIQUID_WALL_COOLERS -1369060582
 define TEMP_CONVERT 273.15
 
 move cooling_active 0
 move heating_active 0
+
+l cooler w_cooler PrefabHash
+l heater w_heater PrefabHash
 
 start:
 yield
@@ -45,9 +51,8 @@ jal display
 bgt curr_temp max_temp cooling
 blt curr_temp min_temp heating
 
-sb WALL_COOLERS On cooling_active
-sb LIQUID_WALL_COOLERS On cooling_active
-sb WALL_HEATERS On heating_active
+sb cooler On cooling_active
+sb heater On heating_active
 
 j start
 
@@ -71,8 +76,7 @@ brdns temp_disp 2
 jal display
 
 # send state to coolers
-sb WALL_COOLERS On cooling_active
-sb LIQUID_WALL_COOLERS On cooling_active
+sb cooler On cooling_active
 
 bgtz cooling_active cooling
 j start
@@ -88,7 +92,7 @@ brdns temp_disp 2
 jal display
 
 # send state to heaters
-sb WALL_HEATERS On heating_active
+sb heater On heating_active
 
 bgtz heating_active heating
 j start
