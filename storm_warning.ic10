@@ -13,8 +13,8 @@ alias siren_high r2
 alias siren_low r3
 alias siren_on r4
 
-s announcer Mode 18 # "Storm Incoming!"
-s siren Mode 10 # nice siren sound
+s announcer Mode 18 # "StormIncoming"
+s siren Mode 10 # "Alarm8"
 
 start:
 yield
@@ -35,8 +35,8 @@ s readout Setting minutes # send to display
 j warning
 
 warning:
-slt siren_high minutes 2 # got more than 2m59s?
-sgt siren_low minutes 1 # got less than 60s?
+slt siren_high minutes 3 # got less than 3m?
+sgt siren_low minutes 0 # got more than 60s?
 and siren_on siren_high siren_low # sound siren?
 s siren On siren_on # start siren if 1<minutes<3
 beq storm_mode 1 countdown # still waiting? go back
