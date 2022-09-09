@@ -1,38 +1,45 @@
-alias sensor d0
+alias Sensor d0 # Kit (Sensor) > Daylight Sensor
+# Place sensor facing UP, and not in an enclosed space
+alias Display d1 # Optional, Kit (Console)
+alias PanelType1 d2 # Any controllable Solar Panel
+alias PanelType2 d3 # Optional
 
-alias angle_v r0
-alias angle_h r1
-alias corr_angle r2
+alias AngleVertical r0
+alias AngleHorizontal r1
+alias CorrectionAngle r2
+alias Panel1Hash r3
+alias Panel2Hash r4
+alias PanelEfficiency r5
 
 # define directions of sensor and panel power ports
-define SENSOR_DATA_ANGLE 0
-define PANEL_POWER_ANGLE 90
-
-# define panel hashes
-define BASIC_1_PANEL -2045627372
-define BASIC_2_PANEL -539224550
-define HEAVY_1_PANEL -934345724
-define HEAVY_2_PANEL -1545574413
+define SENSORDATAANGLE 0
+define PANELPOWERANGLE 90
 
 # calculate horizontal correction
-sub corr_angle SENSOR_DATA_ANGLE PANEL_POWER_ANGLE
-sub corr_angle corr_angle 90
+sub CorrectionAngle SENSORDATAANGLE PANELPOWERANGLE
+sub CorrectionAngle CorrectionAngle 90
+
+# load panel PrefabHash for later use
+l Panel1Hash PanelType1 PrefabHash
+bdns PanelType2 start
+l Panel2Hash PanelType2 PrefabHash
 
 start:
 yield
+l AngleVertical Sensor Vertical
+sub AngleVertical 90 AngleVertical
+l AngleHorizontal Sensor Horizontal
+add AngleHorizontal AngleHorizontal CorrectionAngle
 
-l angle_v sensor Vertical
-sub angle_v 90 angle_v
-l angle_h sensor Horizontal
-add angle_h angle_h corr_angle
+bdns Display panelmove
+lb PanelEfficiency Panel1Hash Ratio Average
+s Display Setting PanelEfficiency
 
-sb BASIC_1_PANEL Vertical angle_v
-sb BASIC_2_PANEL Vertical angle_v
-sb HEAVY_1_PANEL Vertical angle_v
-sb HEAVY_2_PANEL Vertical angle_v
-sb BASIC_1_PANEL Horizontal angle_h
-sb BASIC_2_PANEL Horizontal angle_h
-sb HEAVY_1_PANEL Horizontal angle_h
-sb HEAVY_2_PANEL Horizontal angle_h
+panelmove:
+sb Panel1Hash Vertical AngleVertical
+sb Panel1Hash Horizontal AngleHorizontal
+bdns PanelType2 start
+sb Panel2Hash Vertical AngleVertical
+sb Panel2Hash Horizontal AngleHorizontal
 
 j start
