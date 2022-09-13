@@ -1,68 +1,68 @@
-alias gas_sensor d0
+alias GasSensor d0
 # d1= Logic Switch, Dial variant (Max=30)
-alias thermostat d1
+alias Thermostat d1
 # d2 = Logic Memory, must be more than 0
-alias temp_variance d2
+alias TempVariance d2
 # d3 = Console, LED Display variant, optional
-alias temp_disp d3
+alias TempDisplay d3
 # d4 = Wall Cooler
-alias w_cooler d4
+alias WallCooler d4
 # d5 = Wall Heater
-alias w_heater d5
+alias WallHeater d5
 
-alias curr_temp r0
-alias target_temp r1
-alias variance r2
-alias min_temp r3
-alias max_temp r4
-alias cooling_active r5
-alias heating_active r6
-alias cooler r7
-alias heater r8
+alias CurrentTemp r0
+alias TargetTemp r1
+alias Variance r2
+alias MinTemp r3
+alias MaxTemp r4
+alias CoolingActive r5
+alias HeatingActive r6
+alias Cooler r7
+alias Heater r8
 
-define TEMP_CONVERT 273.15
+define TEMPCONVERT 273.15
 
-move cooling_active 0
-move heating_active 0
+move CoolingActive 0
+move HeatingActive 0
 
-l cooler w_cooler PrefabHash
-l heater w_heater PrefabHash
+l Cooler WallCooler PrefabHash
+l Heater WallHeater PrefabHash
 
 start:
 yield
 # establish min- and max-temps to registry
-l variance temp_variance Setting
-l min_temp thermostat Setting
-sub min_temp min_temp variance
-l max_temp thermostat Setting
-add max_temp max_temp variance
+l Variance TempVariance Setting
+l MinTemp Thermostat Setting
+sub MinTemp MinTemp Variance
+l MaxTemp Thermostat Setting
+add MaxTemp MaxTemp Variance
 
-l target_temp thermostat Setting
+l TargetTemp Thermostat Setting
 
 # get current temperature
 jal temp_read
 
 # update display
-brdns temp_disp 2
+brdns TempDisplay 2
 jal display
 
 # compare current temp to max/min temp and
 # initiate cooling or heating if needed
-bgt curr_temp max_temp cooling
-blt curr_temp min_temp heating
+bgt CurrentTemp MaxTemp cooling
+blt CurrentTemp MinTemp heating
 
-sb cooler On cooling_active
-sb heater On heating_active
+sb Cooler On CoolingActive
+sb Heater On HeatingActive
 
 j start
 
 temp_read:
-l curr_temp gas_sensor Temperature
-sub curr_temp curr_temp TEMP_CONVERT
+l CurrentTemp GasSensor Temperature
+sub CurrentTemp CurrentTemp TEMPCONVERT
 j ra
 
 display:
-s temp_disp Setting curr_temp
+s TempDisplay Setting CurrentTemp
 j ra
 
 cooling:
@@ -70,15 +70,15 @@ yield
 jal temp_read
 
 # test if coolers need to be on or not
-sgt cooling_active curr_temp target_temp
+sgt CoolingActive CurrentTemp TargetTemp
 
-brdns temp_disp 2
+brdns TempDisplay 2
 jal display
 
 # send state to coolers
-sb cooler On cooling_active
+sb Cooler On CoolingActive
 
-bgtz cooling_active cooling
+bgtz CoolingActive cooling
 j start
 
 heating:
@@ -86,13 +86,13 @@ yield
 jal temp_read
 
 # test if heaters need to be on or not
-slt heating_active curr_temp target_temp
+slt HeatingActive CurrentTemp TargetTemp
 
-brdns temp_disp 2
+brdns TempDisplay 2
 jal display
 
 # send state to heaters
-sb heater On heating_active
+sb Heater On HeatingActive
 
-bgtz heating_active heating
+bgtz HeatingActive heating
 j start

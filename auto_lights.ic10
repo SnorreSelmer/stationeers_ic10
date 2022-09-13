@@ -1,0 +1,27 @@
+# Uses Occupancy Sensor and (optional) Daylight
+# Sensor to control lights in a room.
+# Can of course control other things too...
+
+alias Detector d0
+alias DaySens d1 # Optional
+alias Lights d2
+
+alias RoomOccupied r0
+alias NightTime r1
+alias LightHash r2
+
+l LightHash Lights PrefabHash
+move NightTime 1
+
+check:
+yield
+l RoomOccupied Detector Activate
+bdns DaySens light
+l NightTime DaySens Activate
+slt NightTime NightTime 1
+j light
+
+light:
+and RoomOccupied RoomOccupied NightTime
+sb LightHash On RoomOccupied
+j check

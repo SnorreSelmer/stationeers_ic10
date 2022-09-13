@@ -2,42 +2,42 @@
 # a siren and an announcer (2x Kit (Speaker))
 # and a display of some sort (Kit (Console))
 
-alias weather d0 # Weather Station
-alias readout d1 # Kit (Console)
-alias announcer d2 # Kit (Speaker)
-alias siren d3 # Kit (Speaker)
+alias Weather d0 # Weather Station
+alias Readout d1 # Kit (Console)
+alias Announcer d2 # Kit (Speaker)
+alias Siren d3 # Kit (Speaker)
 
-alias storm_mode r0
-alias minutes r1
-alias siren_high r2
-alias siren_low r3
-alias siren_on r4
+alias StormMode r0
+alias Minutes r1
+alias SirenHigh r2
+alias SirenLow r3
+alias SirenOn r4
 
-s announcer Mode 18 # "StormIncoming"
-s siren Mode 10 # "Alarm8"
+s Announcer Mode 18 # "StormIncoming"
+s Siren Mode 10 # "Alarm8"
 
 start:
 yield
-l storm_mode weather Mode # check weather
-s announcer On 0 # reset announcer
-beq storm_mode 1 countdown # countdown if incoming
+l StormMode Weather Mode # check weather
+s Announcer On 0 # reset Announcer
+beq StormMode 1 countdown # countdown if incoming
 j start # else return to start
 
 countdown:
 yield
-l storm_mode weather Mode # check weather
-s announcer On 1 # announce storm
+l StormMode Weather Mode # check weather
+s Announcer On 1 # announce storm
 # get countdown value
-l minutes weather NextWeatherEventTime
-div minutes minutes 60 # convert to minutes
-trunc minutes minutes # drop decimals
-s readout Setting minutes # send to display
+l Minutes Weather NextWeatherEventTime
+div Minutes Minutes 60 # convert to minutes
+trunc Minutes Minutes # drop decimals
+s Readout Setting Minutes # send to display
 j warning
 
 warning:
-slt siren_high minutes 3 # got less than 3m?
-sgt siren_low minutes 0 # got more than 60s?
-and siren_on siren_high siren_low # sound siren?
-s siren On siren_on # start siren if 1<minutes<3
-beq storm_mode 1 countdown # still waiting? go back
+slt SirenHigh Minutes 3 # got less than 3m?
+sgt SirenLow Minutes 0 # got more than 60s?
+and SirenOn SirenHigh SirenLow # sound siren?
+s Siren On SirenOn # start siren if 1<minutes<3
+beq StormMode 1 countdown # still waiting? go back
 j start # reset and start waiting again

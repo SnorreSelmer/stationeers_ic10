@@ -6,69 +6,68 @@
 # filtration units, where all gasses are mixed into
 # a "mud" before being filtered.
 
-alias mud_sensor d0 # Pipe Analyzer
-alias tank d1 # Tank
-alias purge_button d2 # Logic (Switch)
-alias purge_pump d3 # Volume (Turbo) Pump
-alias filter_unit d4 # Kit (Atmospherics)
-alias filter_display d5 # Kit (Console)
+alias MudSensor d0 # Pipe Analyzer
+alias Tank d1 # Tank
+alias PurgeButton d2 # Logic (Switch)
+alias PurgePump d3 # Volume (Turbo) Pump
+alias FilterUnit d4 # Kit (Atmospherics)
+alias FilterDisplay d5 # Kit (Console)
 
-alias mud_temp r0
-alias filter1 r1
-alias filter2 r2
-alias tank_press r3
-alias button r4
-alias filter_run r5
-alias filter_test r6
-alias purge_run r7
-alias has_gas r8
+alias MudTemp r0
+alias Filter1 r1
+alias Filter2 r2
+alias TankPress r3
+alias FilterRun r4
+alias FilterTest r5
+alias PurgeRun r6
+alias HasGas r7
 
 define MAX_PRESS 58000 # 58MPa
-define MAX_TEMP 313 # 40C
+define MAX_TEMP 313.15 # 40C
 
-l r9 purge_pump Maximum
-s purge_pump Setting r9
+l r9 PurgePump Maximum
+s PurgePump Setting r9
 
-s filter_display Color 4 # red
+s FilterDisplay Color 4 # red
 
 start:
 yield
-s purge_pump On 0
-ls filter1 filter_unit 0 Quantity
-ls filter2 filter_unit 1 Quantity
-beqz filter1 swap_filter_1
-beqz filter2 swap_filter_2
-s filter_display On 0
-l purge_run purge_button Setting
-bgtz purge_run purge
+s PurgePump On 0
+ls Filter1 FilterUnit 0 Quantity
+ls Filter2 FilterUnit 1 Quantity
+beqz Filter1 swap_filter_1
+beqz Filter2 swap_filter_2
+s FilterDisplay On 0
+l PurgeRun PurgeButton Setting
+bgtz PurgeRun purge
 j filter
 
 swap_filter_1: # if right filter needs swapping
-s filter_display Setting 1
-s filter_display On 1
+s FilterDisplay Setting 1
+s FilterDisplay On 1
 j filter # then continue filtering
 
 swap_filter_2: # if left filter needs swapping
-s filter_display Setting 2
-s filter_display On 1
+s FilterDisplay Setting 2
+s FilterDisplay On 1
 j filter # then continue filtering
 
 filter:
-l mud_temp mud_sensor Temperature
-l tank_press tank Pressure
-l has_gas mud_sensor RatioCarbonDioxide
-sgtz has_gas has_gas
-slt filter_run mud_temp MAX_TEMP
-slt filter_test tank_press MAX_PRESS
-and filter_run filter_run filter_test
-and filter_run filter_run has_gas
-s filter_unit On filter_run
+l MudTemp MudSensor Temperature
+l TankPress Tank Pressure
+l HasGas MudSensor RatioCarbonDioxide
+sgtz HasGas HasGas
+slt FilterRun MudTemp MAX_TEMP
+slt FilterTest TankPress MAX_PRESS
+and FilterRun FilterRun FilterTest
+and FilterRun FilterRun HasGas
+s FilterUnit On FilterRun
 j start
 
 purge:
 yield
-s filter_unit On 0
-l tank_press tank Pressure
-s purge_pump On 1
-bgtz tank_press purge
+s FilterUnit On 0
+l TankPress Tank Pressure
+s PurgePump On 1
+bgtz TankPress purge
 j start

@@ -1,33 +1,33 @@
 # Runs up to six sorters that filter throughput by ItemClass
 # When looking at the outputs, left = ITEMCLASS, right = everything else
 
-alias occupied r0
-alias input_class r1
-alias is_class r2
-alias sorter_counter r3
+alias SlotOccupied r0
+alias InputClass r1
+alias IsClass r2
+alias SorterCounter r3
 
-move sorter_counter 0
+move SorterCounter 0
 
 define ITEMCLASS 19 # 10=ores, 19=ingots, 33=wrekage
 define INPUTSLOT 0 # sorter input-slot
 
 start:
 jal sort
-add sorter_counter sorter_counter 1
-bgt sorter_counter 5 reset
+add SorterCounter SorterCounter 1
+bgt SorterCounter 5 reset
 j start
 
 sort:
 bdns dr3 ra
 s dr3 Mode 2 # set sorter to IC mode
-ls occupied dr3 INPUTSLOT Occupied # check if anything to sort
-beqz occupied ra
-ls input_class dr3 INPUTSLOT Class
-seq is_class input_class ITEMCLASS # change seq to sne to swap output ports
-s dr3 Output is_class
+ls SlotOccupied dr3 INPUTSLOT Occupied # check if anything to sort
+beqz SlotOccupied ra
+ls InputClass dr3 INPUTSLOT Class
+seq IsClass InputClass ITEMCLASS # change seq to sne to swap output ports
+s dr3 Output IsClass
 j ra
 
 reset:
 yield
-move sorter_counter 0
+move SorterCounter 0
 j start

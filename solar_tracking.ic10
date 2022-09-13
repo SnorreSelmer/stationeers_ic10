@@ -9,7 +9,8 @@ alias AngleHorizontal r1
 alias CorrectionAngle r2
 alias Panel1Hash r3
 alias Panel2Hash r4
-alias PanelEfficiency r5
+alias PanelOutput1 r5
+alias PanelOutput2 r6
 
 # define directions of sensor and panel power ports
 define SENSORDATAANGLE 0
@@ -24,6 +25,10 @@ l Panel1Hash PanelType1 PrefabHash
 bdns PanelType2 start
 l Panel2Hash PanelType2 PrefabHash
 
+# set Display to Power-mode
+bdns Display start
+s Display Mode 2
+
 start:
 yield
 l AngleVertical Sensor Vertical
@@ -32,8 +37,13 @@ l AngleHorizontal Sensor Horizontal
 add AngleHorizontal AngleHorizontal CorrectionAngle
 
 bdns Display panelmove
-lb PanelEfficiency Panel1Hash Ratio Average
-s Display Setting PanelEfficiency
+lb PanelOutput1 Panel1Hash Charge Sum
+bdns PanelType2 paneldisplay
+lb PanelOutput2 Panel2Hash Charge Sum
+add PanelOutput1 PanelOutput1 PanelOutput2
+
+paneldisplay:
+s Display Setting PanelOutput1
 
 panelmove:
 sb Panel1Hash Vertical AngleVertical
