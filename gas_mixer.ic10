@@ -3,59 +3,59 @@
 # and a Kit (Button, moment type) to trigger purge.
 # Gas mixer ratio is manually set!
 
-alias tank_a d0
-alias tank_b d1
-alias tank_out d2
-alias mixer d3
-alias pump d4
-alias button d5
+alias TankA d0
+alias TankB d1
+alias TankOut d2
+alias Mixer d3
+alias Pump d4
+alias Button d5
 
-alias tank_a_press r0
-alias tank_b_press r1
-alias tank_out_press r2
-alias tank_a_ok r3
-alias tank_b_ok r4
-alias tank_out_ok r5
-alias mixer_run r6
-alias purge_activate r7
+alias TankAPress r0
+alias TankBPress r1
+alias TankOutPress r2
+alias TankAOk r3
+alias TankBOk r4
+alias TankOutOk r5
+alias MixerRun r6
+alias PurgeActivate r7
 
 define PRESS_IN_MIN 500 # 500kPa
 define PRESS_OUT_MAX 2000 # 2MPa
 
 # Sets purge pump to max output
-l tank_a_press pump Maximum
-s pump Setting tank_a_press
+l TankAPress Pump Maximum
+s Pump Setting TankAPress
 
 start:
 yield
-s pump On 0 # Ensures purge pump is off
+s Pump On 0 # Ensures purge pump is off
 # Checks is purge is activated
-l purge_activate button Setting
-bgtz purge_activate purge
+l PurgeActivate Button Setting
+bgtz PurgeActivate purge
 
 # Loads tank pressures
-l tank_a_press tank_a Pressure
-l tank_b_press tank_b Pressure
-l tank_out_press tank_out Pressure
+l TankAPress TankA Pressure
+l TankBPress TankB Pressure
+l TankOutPress TankOut Pressure
 
 # Checks if pressures are within tolerances
-sgt tank_a_ok tank_a_press PRESS_IN_MIN
-sgt tank_b_ok tank_b_press PRESS_IN_MIN
-slt tank_out_ok tank_out_press PRESS_OUT_MAX
+sgt TankAOk TankAPress PRESS_IN_MIN
+sgt TankBOk TankBPress PRESS_IN_MIN
+slt TankOutOk TankOutPress PRESS_OUT_MAX
 
-and mixer_run tank_a_ok tank_b_ok
-and mixer_run tank_out_ok mixer_run
+and MixerRun TankAOk TankBOk
+and MixerRun TankOutOk MixerRun
 
 # Activates mixer if all is ok
-s mixer On mixer_run
+s Mixer On MixerRun
 j start
 
 purge:
 yield
-s mixer On 0 # Turns mixer off
+s Mixer On 0 # Turns mixer off
 # Gets output tank pressure
-l tank_out_press tank_out Pressure
-s pump On 1 # Activates purge pump
+l TankOutPress TankOut Pressure
+s Pump On 1 # Activates purge pump
 # Runs pump until tank is empty
-bgtz tank_out_press purge
+bgtz TankOutPress purge
 j start
