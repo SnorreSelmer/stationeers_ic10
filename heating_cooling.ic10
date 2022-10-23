@@ -32,25 +32,22 @@ start:
 yield
 # establish min- and max-temps to registry
 l Variance TempVariance Setting
-l MinTemp Thermostat Setting
-sub MinTemp MinTemp Variance
-l MaxTemp Thermostat Setting
-add MaxTemp MaxTemp Variance
-
 l TargetTemp Thermostat Setting
+sub MinTemp TargetTemp Variance
+add MaxTemp TargetTemp Variance
 
 # get current temperature
 jal temp_read
 
 # update display
-brdns TempDisplay 2
-jal display
+bdseal TempDisplay display
 
 # compare current temp to max/min temp and
 # initiate cooling or heating if needed
 bgt CurrentTemp MaxTemp cooling
 blt CurrentTemp MinTemp heating
 
+# Ensure coolers and heaters are off when not needed
 sb Cooler On CoolingActive
 sb Heater On HeatingActive
 
@@ -72,8 +69,8 @@ jal temp_read
 # test if coolers need to be on or not
 sgt CoolingActive CurrentTemp TargetTemp
 
-brdns TempDisplay 2
-jal display
+# update display
+bdseal TempDisplay display
 
 # send state to coolers
 sb Cooler On CoolingActive
@@ -88,8 +85,8 @@ jal temp_read
 # test if heaters need to be on or not
 slt HeatingActive CurrentTemp TargetTemp
 
-brdns TempDisplay 2
-jal display
+# update display
+bdseal TempDisplay display
 
 # send state to heaters
 sb Heater On HeatingActive
