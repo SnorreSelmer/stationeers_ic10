@@ -5,7 +5,7 @@ All code should be used with caution. It should work:tm: but I can't guarantee i
 
 ## The scripts:
 - **auto_arc_furnace.ic10** - As long as there's ore in the input, the Arc Furnace will smelt.
-- **auto_class_sorter.ic10** - Can control multiple sorters to sort out a single itemClass. Useful for looking ingots between printers, and then splitting out the printed items.
+- **auto_class_sorter.ic10** - Can control multiple sorters to sort out a single itemClass. Useful for looping ingots between printers, and then splitting out the printed items.
 - **auto_lights.ic10** - Turns on the lights if you're in a room.
 - **automated_canister_filling.ic10** - Safely fills any canister, and then vacuums out the Canister Holder to prevent exploding canisters.
 - **cooling_tower_drain.ic10** - Isolates a furnace cooling-tower until the temperature is low enough to safely drain.
