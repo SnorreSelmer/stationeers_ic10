@@ -1,7 +1,11 @@
 alias Dial d0
+# Logic Switch, Dial variant
 alias DisplayOrder d1
+# Kit (Console), some LED Display variant
 alias DisplayExport d2
+# Kit (Console), some LED Display variant
 alias Printer d3
+# One of the printer variants
 
 alias CountOrder r0
 alias CountExport r1
