@@ -8,6 +8,7 @@ All code should be used with caution. It should work:tm: but I can't guarantee i
 - **auto_class_sorter.ic10** - Can control multiple sorters to sort out a single itemClass. Useful for looping ingots between printers, and then splitting out the printed items.
 - **auto_lights.ic10** - Turns on the lights if you're in a room.
 - **automated_canister_filling.ic10** - Safely fills any canister, and then vacuums out the Canister Holder to prevent exploding canisters.
+- **battery_monitor.ic10** - Displays average charge of a bank of station batteries on a Diode Slide, and lighting it if you're down to your last battery.
 - **cooling_tower_drain.ic10** - Isolates a furnace cooling-tower until the temperature is low enough to safely drain.
 - **filtration.ic10** - **!!!OLD!!!** Shows if filters need to be replaced, prevents processing gasses that are too hot or the filtered tank is too full, has a purge-pump function in case the filtered output gets contaminated. **Still works fine, but doesn't use the capabilities of the new filtration units!**
 - **gas_mixer.ic10** - Controls a static Gas Mixer. Prevents mixing gasses that are too far apart in temperature, prevents over-pressure, and stops mixing if input pressure gets too low.
