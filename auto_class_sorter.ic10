@@ -12,13 +12,12 @@ define ITEMCLASS 19 # 10=ores, 19=ingots, 33=wrekage
 define INPUTSLOT 0 # sorter input-slot
 
 start:
-jal sort
+bdseal dr3 sort
 add SorterCounter SorterCounter 1
 bgt SorterCounter 5 reset
 j start
 
 sort:
-bdns dr3 ra
 s dr3 Mode 2 # set sorter to IC mode
 ls SlotOccupied dr3 INPUTSLOT Occupied # check if anything to sort
 beqz SlotOccupied ra
