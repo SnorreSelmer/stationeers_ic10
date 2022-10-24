@@ -1,0 +1,31 @@
+alias DiodeSlider d0 # Kit (Light) > Diode Slide
+alias FirstBattery d1 #The battery closest to your base
+alias SecondBattery d2 # Optional second battery type
+
+alias FirstBattCharge r0
+alias Type1Hash r1
+alias Type2Hash r2
+alias Type1Max r3
+alias Type2Max r4
+alias Type1Charge r5
+alias Type2Charge r6
+
+start:
+l Type1Hash FirstBattery PrefabHash
+lb Type1Max Type1Hash Maximum Sum
+lb Type1Charge Type1Hash Charge Sum
+l FirstBattCharge FirstBattery Ratio
+bdseal SecondBattery t2getcharge
+div Type1Charge Type1Charge Type1Max
+s DiodeSlider Setting Type1Charge
+slt FirstBattCharge FirstBattCharge 0.99
+s DiodeSlider On FirstBattCharge
+j start
+
+t2getcharge:
+l Type2Hash SecondBattery PrefabHash
+lb Type2Max Type2Hash Maximum Sum
+lb Type2Charge Type2Hash Charge Sum
+add Type1Max Type1Max Type2Max
+add Type1Charge Type1Charge Type2Charge
+j ra
