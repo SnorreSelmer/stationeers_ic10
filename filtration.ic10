@@ -1,73 +1,102 @@
-# Complete filtration circuit that controls filter-
-# unit, checks filters, maintains safe temperature
-# and pressure.
-# 
-# "Mud pipe" is the shared input-pipe for all
-# filtration units, where all gasses are mixed into
-# a "mud" before being filtered.
+# Automated Filtration Control
+# Based on code by CowsAreEvil
+# Designed for use in filtration IC slot only
+# Designed for parallel filtration setups only
+# Will fill storage tank to MAXPRESSUE (set below)
+# Will detect filter cartridge and activate when
+# INPUTAMOUNT moles of gas is detected (set below)
 
-alias MudSensor d0 # Pipe Analyzer
-alias Tank d1 # Tank
-alias PurgeButton d2 # Logic (Switch)
-alias PurgePump d3 # Volume (Turbo) Pump
-alias FilterUnit d4 # Kit (Atmospherics)
-alias FilterDisplay d5 # Kit (Console)
+alias filtration db
+alias diode d0  # Optional
 
-alias MudTemp r0
-alias Filter1 r1
-alias Filter2 r2
-alias TankPress r3
-alias FilterRun r4
-alias FilterTest r5
-alias PurgeRun r6
-alias HasGas r7
+alias filterLeft r0
+alias filterRight r1
+alias filterMin r2
+alias filterMax r3
+alias filterRemain r4
+alias filterLight r5
+alias filterHash r6
+alias filterMols r7
+alias filterActive r8
+alias inMolsCheck r9
+alias inMolsCompare r10
+alias totalMols r11
+alias outPressure r12
 
-define MAX_PRESS 58000 # 58MPa
-define MAX_TEMP 313.15 # 40C
-
-l r9 PurgePump Maximum
-s PurgePump Setting r9
-
-s FilterDisplay Color 4 # red
+define MAXPRESSURE 58000 #Storage pressure kPa
+define INPUTAMOUNT 2  #Moles to activate
 
 start:
 yield
-s PurgePump On 0
-ls Filter1 FilterUnit 0 Quantity
-ls Filter2 FilterUnit 1 Quantity
-beqz Filter1 swap_filter_1
-beqz Filter2 swap_filter_2
-s FilterDisplay On 0
-l PurgeRun PurgeButton Setting
-bgtz PurgeRun purge
-j filter
 
-swap_filter_1: # if right filter needs swapping
-s FilterDisplay Setting 1
-s FilterDisplay On 1
-j filter # then continue filtering
+#Check filters and set diodes
+ls filterLeft filtration 0 Quantity
+ls filterRight filtration 1 Quantity
+or filterActive filterLeft filterRight
+min filterMin filterLeft filterRight
+seqz filterLight filterMin
+bdseal diode slideActivate
+max filterMax filterLeft filterRight
+select filterRemain filterMin filterMin filterMax
+div filterRemain filterRemain 100
+bdseal diode slideSetting
 
-swap_filter_2: # if left filter needs swapping
-s FilterDisplay Setting 2
-s FilterDisplay On 1
-j filter # then continue filtering
+#Check storage pressure
+l outPressure filtration PressureOutput
+slt outPressure outPressure MAXPRESSURE
+and filterActive filterActive outPressure
 
-filter:
-l MudTemp MudSensor Temperature
-l TankPress Tank Pressure
-l HasGas MudSensor RatioCarbonDioxide
-sgtz HasGas HasGas
-slt FilterRun MudTemp MAX_TEMP
-slt FilterTest TankPress MAX_PRESS
-and FilterRun FilterRun FilterTest
-and FilterRun FilterRun HasGas
-s FilterUnit On FilterRun
+#Check filters and available gas
+l totalMols filtration TotalMolesInput
+ls filterHash filtration 0 PrefabHash
+jal checkfilter
+move inMolsCompare inMolsCheck
+ls filterHash filtration 1 PrefabHash
+jal checkfilter
+max filterMols inMolsCheck inMolsCompare
+mul totalMols totalMols filterMols
+sgt totalMols totalMols INPUTAMOUNT
+and filterActive filterActive totalMols
+#Activate filtration if required
+s filtration Mode filterActive
 j start
 
-purge:
-yield
-s FilterUnit On 0
-l TankPress Tank Pressure
-s PurgePump On 1
-bgtz TankPress purge
+slideActivate:
+s diode On filterLight
+j ra
+
+slideSetting:
+s diode Setting filterRemain
+j ra
+
+checkfilter:
+l inMolsCheck filtration RatioOxygenInput
+beq filterHash -1067319543 ra
+beq filterHash -1217998945 ra
+beq filterHash -721824748 ra
+l inMolsCheck filtration RatioNitrogenInput
+beq filterHash -632657357 ra
+beq filterHash -1387439451 ra
+beq filterHash 632853248 ra
+l inMolsCheck filtration RatioCarbonDioxideInput
+beq filterHash 416897318 ra
+beq filterHash 1876847024 ra
+beq filterHash 1635000764 ra
+l inMolsCheck filtration RatioVolatilesInput
+beq filterHash 1037507240 ra
+beq filterHash 1255156286 ra
+beq filterHash 15011598 ra
+l inMolsCheck filtration RatioPollutantInput
+beq filterHash 63677771 ra
+beq filterHash 1959564765 ra
+beq filterHash 1915566057 ra
+l inMolsCheck filtration RatioNitrousOxideInput
+beq filterHash 1824284061 ra
+beq filterHash 465267979 ra
+beq filterHash -1247674305 ra
+move inMolsCheck 0
+beqz filterHash ra
+
+#if you are still here then it is an error so end
+s filtration On 0
 j start
