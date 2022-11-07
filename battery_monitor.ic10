@@ -1,5 +1,5 @@
 alias DiodeSlider d0 # Kit (Light) > Diode Slide
-alias FirstBattery d1 #The battery closest to your base
+alias FirstBattery d1 # The battery closest to your base
 alias SecondBattery d2 # Optional second battery type
 
 alias FirstBattCharge r0
