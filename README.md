@@ -10,7 +10,7 @@ All code should be used with caution. It should work:tm: but I can't guarantee i
 - **automated_canister_filling.ic10** - Safely fills any canister, and then vacuums out the Canister Holder to prevent exploding canisters.
 - **battery_monitor.ic10** - Displays average charge of a bank of station batteries on a Diode Slide, and lighting it if you're down to your last battery.
 - **cooling_tower_drain.ic10** - Isolates a furnace cooling-tower until the temperature is low enough to safely drain.
-- **filtration.ic10** - Shows if filters need to be replaced, based on CowsAreEvil's setup, minus the gas-cooling. ***WIP! Still needs temperature protection code and purge-pump activation button!***
+- **filtration.ic10** - Shows if filters need to be replaced, halts filtering if temperature is too high or filterable gas is too low. Based on CowsAreEvil's setup, minus the gas-cooling.
 - **gas_mixer.ic10** - Controls a static Gas Mixer. Prevents mixing gasses that are too far apart in temperature, prevents over-pressure, and stops mixing if input pressure gets too low.
 - **heating_cooling.ic10** - Temperature regulator with optional temperature display.
 - **printer_countdown.ic10** - Uses a counter (Stacker or Dial) to order a given number of items. Stops printing when order is filled.
