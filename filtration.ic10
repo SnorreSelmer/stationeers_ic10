@@ -18,18 +18,21 @@ alias filterLight r5
 alias filterHash r6
 alias filterMols r7
 alias filterActive r8
-alias inMolsCheck r9
-alias inMolsCompare r10
-alias totalMols r11
-alias outPressure r12
+alias inTemperature r9
+alias inMolsCheck r10
+alias inMolsCompare r11
+alias totalMols r12
+alias outPressure r13
+alias purgeActive r14
 
-define MAXPRESSURE 58000 #Storage pressure kPa
-define INPUTAMOUNT 2  #Moles to activate
+define MAXPRESSURE 58000 # Storage pressure kPa
+define INPUTAMOUNT 2  # Moles to activate
+define MAXTEMPERATURE 313.15 # 40C
 
 start:
 yield
 
-#Check filters and set diodes
+# Check filters and set diodes
 ls filterLeft filtration 0 Quantity
 ls filterRight filtration 1 Quantity
 or filterActive filterLeft filterRight
@@ -41,12 +44,16 @@ select filterRemain filterMin filterMin filterMax
 div filterRemain filterRemain 100
 bdseal diode slideSetting
 
-#Check storage pressure
+# Check storage pressure
 l outPressure filtration PressureOutput
 slt outPressure outPressure MAXPRESSURE
 and filterActive filterActive outPressure
 
-#Check filters and available gas
+# Check temperature
+l inTemperature filtration TemperatureInput
+bgt inTemperature MAXTEMPERATURE start
+
+# Check filters and available gas
 l totalMols filtration TotalMolesInput
 ls filterHash filtration 0 PrefabHash
 jal checkfilter
