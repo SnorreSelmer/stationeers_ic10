@@ -32,9 +32,6 @@ l Minutes Weather NextWeatherEventTime
 div Minutes Minutes 60 # convert to minutes
 trunc Minutes Minutes # drop decimals
 s Readout Setting Minutes # send to display
-j warning
-
-warning:
 slt SirenHigh Minutes 3 # got less than 3m?
 sgt SirenLow Minutes 0 # got more than 60s?
 and SirenOn SirenHigh SirenLow # sound siren?
