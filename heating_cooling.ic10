@@ -1,26 +1,24 @@
 alias GasSensor d0
 # d1= Logic Switch, Dial variant (Max=30)
 alias Thermostat d1
-# d2 = Logic Memory, must be more than 0
-alias TempVariance d2
-# d3 = Console, LED Display variant, optional
-alias TempDisplay d3
-# d4 = Wall Cooler
-alias WallCooler d4
-# d5 = Wall Heater
-alias WallHeater d5
+# d2 = Console, LED Display variant, optional
+alias TempDisplay d2
+# d3 = Wall Cooler
+alias WallCooler d3
+# d4 = Wall Heater
+alias WallHeater d4
 
 alias CurrentTemp r0
 alias TargetTemp r1
-alias Variance r2
-alias MinTemp r3
-alias MaxTemp r4
-alias CoolingActive r5
-alias HeatingActive r6
-alias Cooler r7
-alias Heater r8
+alias MinTemp r2
+alias MaxTemp r3
+alias CoolingActive r4
+alias HeatingActive r5
+alias Cooler r6
+alias Heater r7
 
 define TEMPCONVERT 273.15
+define VARIANCE 2
 
 move CoolingActive 0
 move HeatingActive 0
@@ -31,10 +29,9 @@ l Heater WallHeater PrefabHash
 start:
 yield
 # establish min- and max-temps to registry
-l Variance TempVariance Setting
 l TargetTemp Thermostat Setting
-sub MinTemp TargetTemp Variance
-add MaxTemp TargetTemp Variance
+sub MinTemp TargetTemp VARIANCE
+add MaxTemp TargetTemp VARIANCE
 
 # get current temperature
 jal temp_read
