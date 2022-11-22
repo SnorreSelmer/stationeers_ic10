@@ -1,7 +1,3 @@
-# needs a Weather Station
-# a siren and an announcer (2x Kit (Speaker))
-# and a display of some sort (Kit (Console))
-
 alias Weather d0 # Weather Station
 alias Readout d1 # Kit (Console)
 alias Announcer d2 # Kit (Speaker)
@@ -9,9 +5,7 @@ alias Siren d3 # Kit (Speaker)
 
 alias StormMode r0
 alias Minutes r1
-alias SirenHigh r2
-alias SirenLow r3
-alias SirenOn r4
+alias SirenOn r2
 
 s Announcer Mode 18 # "StormIncoming"
 s Siren Mode 10 # "Alarm8"
@@ -32,12 +26,8 @@ l Minutes Weather NextWeatherEventTime
 div Minutes Minutes 60 # convert to minutes
 trunc Minutes Minutes # drop decimals
 s Readout Setting Minutes # send to display
-j warning
-
-warning:
-slt SirenHigh Minutes 3 # got less than 3m?
-sgt SirenLow Minutes 0 # got more than 60s?
-and SirenOn SirenHigh SirenLow # sound siren?
+bgt Minutes 2 countdown # got more than 3m?
+sgt SirenOn Minutes 0 # got more than 60s?
 s Siren On SirenOn # start siren if 1<minutes<3
 beq StormMode 1 countdown # still waiting? go back
 j start # reset and start waiting again
