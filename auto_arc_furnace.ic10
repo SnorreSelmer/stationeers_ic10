@@ -1,20 +1,25 @@
-# It needs an Arc Furnace, that's all!
-
-alias Furnace d0
+# Connect Arc Furnaces to the screws, that's all!
 
 alias ImportOccupied r0
 alias Active r1
-alias RunFurnace r2
+
+move r2 0
 
 start:
-yield
-ls ImportOccupied Furnace 0 Occupied
-l Active Furnace Activate
-xor RunFurnace ImportOccupied Active
-bgtz RunFurnace run 
+bdseal dr2 run
+add r2 r2 1
+bgt r2 5 reset
 j start
 
 run:
-bgtz Active start # already running = go to start
-s Furnace Activate 1
+s dr2 On 1
+l Active dr2 Activate
+bgtz Active ra
+ls ImportOccupied dr2 0 Occupied
+s dr2 Activate ImportOccupied
+j ra
+
+reset:
+yield
+move r2 0
 j start
