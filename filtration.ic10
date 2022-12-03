@@ -34,12 +34,12 @@ yield
 # Check storage pressure
 l OutPressure filtration PressureOutput
 slt FilterActive OutPressure MAXPRESSURE
-beqz FilterActive filteronoff
+beqz FilterActive filteronoff # if pressure > MAX, skip to shutdown
 
 # Check temperature
 l InTemperature filtration TemperatureInput
 slt FilterActive InTemperature MAXTEMPERATURE
-beqz FilterActive filteronoff
+beqz FilterActive filteronoff # if temperature > MAX, skip to shutdown
 
 # Check filters and set diodes
 ls FilterLeft filtration 0 Quantity
