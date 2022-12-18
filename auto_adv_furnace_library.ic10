@@ -1,0 +1,127 @@
+# Based on Elmotrix' FurnaceLibraryV4
+# Removed Prev/Next buttons, added on/off switch
+alias Furnace d0
+alias FurnaceOn d1
+alias LBDial d2
+alias ICFurnaceController d3
+alias ResNr r3
+alias hashValue r4
+alias TempMM r5
+alias TempMin r6
+alias PresMM r7
+alias PresMin r8
+alias hashMem r9
+alias SetTemp r13
+alias SetPres r14
+define ResMax 17
+define Delay 6 #Ticks (before changes are made)
+BWait:
+l r15 FurnaceOn Setting
+s Furnace On r15
+s db Setting hashValue
+l r0 Furnace RecipeHash
+seq r0 r0 hashValue
+s Furnace Open r0
+move hashMem hashValue
+yield
+l hashValue db Setting
+or r0 r1 r2
+add ResNr ResNr r1
+sub ResNr ResNr r2
+Dial:
+bdns LBDial SelectRecipe
+s LBDial Mode ResMax
+move r0 ResNr
+l ResNr LBDial Setting
+sne r0 r0 ResNr
+max ResNr ResNr 1
+SelectRecipe:
+select hashValue r0 0 hashValue
+sle r0 ResNr ResMax
+select ResNr r0 ResNr 1
+select ResNr ResNr ResNr ResMax
+jr ResNr #
+select hashValue hashValue hashValue -1301215609
+select hashValue hashValue hashValue -404336834
+select hashValue hashValue hashValue -290196476
+select hashValue hashValue hashValue -929742000
+select hashValue hashValue hashValue 226410516
+select hashValue hashValue hashValue 2134647745
+select hashValue hashValue hashValue -1406385572
+select hashValue hashValue hashValue -654790771
+select hashValue hashValue hashValue 502280180
+select hashValue hashValue hashValue -82508479
+select hashValue hashValue hashValue -297990285
+select hashValue hashValue hashValue 1058547521
+select hashValue hashValue hashValue 412924554
+select hashValue hashValue hashValue 1579842814
+select hashValue hashValue hashValue -787796599
+select hashValue hashValue hashValue -1897868623
+select hashValue hashValue hashValue 156348098
+seq r0 hashValue hashMem
+add r12 r12 1
+select r12 r0 r12 0
+blt r12 Delay BWait
+move PresMM 1100.1
+move TempMM 500.2
+beq hashValue 2134647745 SetValue ##Lead
+move TempMM 700.2
+beq hashValue -404336834 SetValue ##Copper
+beq hashValue 226410516 SetValue ##Gold
+beq hashValue -929742000 SetValue ##Silver
+move TempMM 900.2
+beq hashValue -1301215609 SetValue ##Iron
+beq hashValue -1406385572 SetValue ##Nickel
+move TempMM 1000.2
+beq hashValue -290196476 SetValue ##Silicon
+beq hashValue -654790771 SetValue ## Steel
+move TempMM 400.05
+beq hashValue -82508479 SetValue ## Solder
+move PresMM 31000.39
+move TempMM 1100.2
+beq hashValue 412924554 SetValue ##Astroloy
+move PresMM 21000.3
+beq hashValue 1058547521 SetValue ## Constantan
+move PresMM 23750.2375
+move TempMM 700.2
+beq hashValue -787796599 SetValue ## Inconell
+move PresMM 1000.02
+beq hashValue 502280180 SetValue ## Electrum
+move PresMM 11000.19
+move TempMM 1900.21
+beq hashValue -1897868623 SetValue ## Stellite
+move PresMM 26000.29
+move TempMM 975.0975
+beq hashValue 1579842814 SetValue ## Hastaloy
+move PresMM 51000.51
+move TempMM 500.07
+beq hashValue 156348098 SetValue ## Waspaloy
+move PresMM 19000.19000
+move TempMM 1300.14 ## invar
+SetValue:
+floor TempMin TempMM
+sub TempMM TempMM TempMin
+mul TempMM TempMM 10000
+round TempMM TempMM
+floor PresMin PresMM
+sub PresMM PresMM PresMin
+mul PresMM PresMM 100000
+l SetTemp Furnace Temperature
+div SetTemp SetTemp 100
+round SetTemp SetTemp
+mul SetTemp SetTemp 100
+l SetPres Furnace Pressure
+div SetPres SetPres 500
+round SetPres SetPres
+mul SetPres SetPres 500
+round PresMM PresMM
+max SetPres SetPres PresMin
+brlez PresMM 2
+min SetPres SetPres PresMM
+max SetTemp SetTemp TempMin
+brlez TempMM 2
+min SetTemp SetTemp TempMM
+div r0 SetTemp 10000
+add r0 r0 SetPres
+s ICFurnaceController Setting r0
+j BWait
