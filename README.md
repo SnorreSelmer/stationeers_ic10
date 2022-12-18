@@ -4,12 +4,14 @@ This repo contains ic10 code for the space survival sandbox Stationeers (https:/
 All code should be used with caution. It should work:tm: but I can't guarantee it's not broken. Items needed are described in the comments at the top of each file.
 
 ## The scripts:
+- **auto_adv_furnace_library.ic10** - A fork of Elmotrix' furnace-library, removed Prev/Next buttons, added external On/Off-switch.
 - **auto_arc_furnace.ic10** - As long as there's ore in the input, the Arc Furnace will smelt.
 - **auto_class_sorter.ic10** - Can control multiple sorters to sort out a single itemClass. Useful for looping ingots between printers, and then splitting out the printed items.
 - **auto_lights.ic10** - Turns on the lights if you're in a room.
 - **automated_canister_filling.ic10** - Safely fills any canister, and then vacuums out the Canister Holder to prevent exploding canisters.
 - **battery_monitor.ic10** - Displays average charge of a bank of station batteries on a Diode Slide, and lighting it if you're down to your last battery.
 - **cooling_tower_drain.ic10** - Isolates a furnace cooling-tower until the temperature is low enough to safely drain.
+- **deep-miner.ic10** - ***!!!Does not work at this time!!!*** Deep Miner automation (works), but the Centrifuge automation doesn't (yet). Filed bug-report, hoping **Slot.Occupied** will become available soon.
 - **filtration.ic10** - Shows if filters need to be replaced, halts filtering if temperature is too high or filterable gas is too low. Based on CowsAreEvil's setup, minus the gas-cooling.
 - **gas_mixer.ic10** - Controls a static Gas Mixer. Prevents mixing gasses that are too far apart in temperature, prevents over-pressure, and stops mixing if input pressure gets too low.
 - **heating_cooling.ic10** - Temperature regulator with optional temperature display.
