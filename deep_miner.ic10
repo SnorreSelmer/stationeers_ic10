@@ -1,0 +1,36 @@
+alias MineOn d0 # Logic Switch
+alias CentriOne d1
+alias CentriTwo d2
+alias CentriThree d3
+alias CentriFour d4
+alias CentriFive d5
+
+alias DoMining r0
+alias OpenCentri r1
+alias CentriCounter r2
+alias CentriOccupied r3
+
+define DEEPMINERHASH 265720906
+define INPUTSLOT 0
+
+move CentriCounter 1
+
+start:
+bdseal dr2 CheckCentrifuge
+add CentriCounter CentriCounter 1
+bgt CentriCounter 5 reset
+j start
+
+CheckCentrifuge:
+ls CentriOccupied dr2 INPUTSLOT Occupied
+seqz OpenCentri CentriOccupied
+s dr2 Open OpenCentri
+s dr2 On CentriOccupied
+j ra
+
+reset:
+yield
+move CentriCounter 1
+l DoMining MineOn Setting
+sb DEEPMINERHASH On DoMining
+j start
