@@ -11,6 +11,7 @@ alias Type1Charge r5
 alias Type2Charge r6
 
 start:
+yield
 l Type1Hash FirstBattery PrefabHash
 lb Type1Max Type1Hash Maximum Sum
 lb Type1Charge Type1Hash Charge Sum
