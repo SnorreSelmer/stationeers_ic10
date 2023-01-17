@@ -3,6 +3,9 @@ This repo contains ic10 code for the space survival sandbox Stationeers (https:/
 
 All code should be used with caution. It should work:tm: but I can't guarantee it's not broken. Items needed are described in the comments at the top of each file.
 
+## "I found a bug!"
+Awesome! My code is probably not perfect, so please file an issue (https://github.com/SnorreSelmer/stationeers_ic10/issues) and I'll fix it! That's the best way to do it, it benefits everyone.
+
 ## The scripts:
 - **auto_adv_furnace_library.ic10** - A fork of Elmotrix' furnace-library, removed Prev/Next buttons, added external On/Off-switch.
 - **auto_arc_furnace.ic10** - As long as there's ore in the input, the Arc Furnace will smelt.
