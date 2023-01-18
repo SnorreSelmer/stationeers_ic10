@@ -147,7 +147,7 @@ This ***define***s ***MinimumTemperature*** as ***20*** (maybe for use as 20 Cel
 
 ## Branch/set matrix
 
-There is logic for relative jumping in code. I have yet to find a use for it that can't be done better with any of the other functions, so I won't cover it here.
+There is also logic for relative jumping in code, and it works by adding an 'r' after the 'b' when branching (so 'b' becomes 'br'). Instead of giving the branch a label to go to, you tell it the number of lines to jump (positive number jumps forwards, negative number jumps backwards).
 
 <div class="level2" id="bkmrk-suffix-prefix-b--b-a"><div class="table sectionedit3"><table class="inline"><thead><tr class="row0"><th class="col0">Suffix</th><th class="col1" colspan="4">Prefix</th></tr></thead><tbody><tr class="row1"><th class="col0" rowspan="2">  
 </th><td class="col1">  
