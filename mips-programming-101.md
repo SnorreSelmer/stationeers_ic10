@@ -112,7 +112,7 @@ and
 slt HeaterOn CurrentTemperature MinimumTemperature
 ```
 
-They could do the exact same thing, but the bottom one actually explains what's going on. And it's still shorter that 57 characters.
+They could do the exact same thing, but the bottom one actually explains what's going on. And it's still shorter than 57 characters.
 
 If you're juggling 10+ registers in your code without naming them, the chances of getting them mixed up increases greatly. And if you do make a mistake somewhere, trying to follow the code can be more complicated than if you used named variables.
 
