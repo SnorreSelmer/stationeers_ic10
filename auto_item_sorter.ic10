@@ -1,0 +1,43 @@
+alias counter r0
+move counter 0
+
+alias hash r1
+alias SlotOccupied r2
+alias InputItem r3
+alias IsItem r4
+
+define INPUTSLOT 0
+
+push 1724793494 # Coal
+push -983091249 # Cobalt
+push -707307845 # Copper
+push -1348105509 # Gold
+push 1758427767 # Iron
+push -190236170 # Lead
+#push 1830218956 # Nickel
+#push 1103972403 # Silicon
+#push -916518678 # Silver
+#push -1516581844 # Uranium
+
+start:
+bdseal dr0 sort
+add counter counter 1
+bgt counter 5 reset
+j start
+
+sort:
+move sp counter
+add sp sp 1
+peek hash
+s dr0 Mode 2
+ls SlotOccupied dr0 INPUTSLOT Occupied
+beqz SlotOccupied ra
+ls InputItem dr0 INPUTSLOT OccupantHash
+sne IsItem InputItem hash
+s dr0 Output IsItem
+j ra
+
+reset:
+move counter 0
+yield
+j start
