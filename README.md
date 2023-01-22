@@ -10,6 +10,7 @@ Awesome! My code is probably not perfect, so please file an issue (https://githu
 - **auto_adv_furnace_library.ic10** - A fork of Elmotrix' furnace-library, removed Prev/Next buttons, added external On/Off-switch.
 - **auto_arc_furnace.ic10** - As long as there's ore in the input, the Arc Furnace will smelt.
 - **auto_class_sorter.ic10** - Can control multiple sorters to sort out a single itemClass. Useful for looping ingots between printers, and then splitting out the printed items.
+- **auto_item_sorter.ic10** - Can control multiple sorters to sort out a single PrefabHash per Sorter. Useful for separating ore output from centrifuges.
 - **auto_lights.ic10** - Turns on the lights if you're in a room.
 - **automated_canister_filling.ic10** - Safely fills any canister, and then vacuums out the Canister Holder to prevent exploding canisters.
 - **battery_monitor.ic10** - Displays average charge of a bank of station batteries on a Diode Slide, and lighting it if you're down to your last battery.
@@ -18,6 +19,7 @@ Awesome! My code is probably not perfect, so please file an issue (https://githu
 - **filtration.ic10** - Shows if filters need to be replaced, halts filtering if temperature is too high or filterable gas is too low. Based on CowsAreEvil's setup, minus the gas-cooling.
 - **gas_mixer.ic10** - Controls a static Gas Mixer. Prevents mixing gasses that are too far apart in temperature, prevents over-pressure, and stops mixing if input pressure gets too low.
 - **heating_cooling.ic10** - Temperature regulator with optional temperature display.
+- **mush_cooler.ic10** - Automatic toggeling of a valve based on temperature. I use it to cool my gas mush-pipe using a Heat Exchanger.
 - **printer_countdown.ic10** - Uses a counter (Stacker or Dial) to order a given number of items. Stops printing when order is filled.
 - **solar_tracking.ic10** - Accurate two-axis solar-panel tracking for up to two types of panels.
 - **storm_warning.ic10** - Monitors a Weather Station, announces incoming storms, sounds an alarm when the storm is 3 minutes from hitting, stops alarm when the storm is less than 1 minute from hitting. (Can be adjusted.)
