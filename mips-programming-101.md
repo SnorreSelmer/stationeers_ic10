@@ -84,7 +84,7 @@ This ***s***ets a 1 (true) in ***r2*** if ***CurrentTemperature*** is ***g***rea
 ### Data end-points, and what can be loaded/set?
 When you want to automate something, the Stationpedia is your best friend! It contains a catalogue of all the things you can make, and lists all the data you can *load from* and/or *set to* it. Here's an example:
 
-***TODO: ADD IMAGE***
+![Stationpedia page for a Kit(Wall Light)](/images/data-end-points.png)
 
 The section we're interested in here is the ***Logic*** section. As you saw in the Setting-example above, I set the ***On*** end-point to the value stored in a register. As we can see in the picture above, ***On*** can be read (***l***oaded) or written (***s***et). ***On*** can take a 1 to turn on, or a 0 to turn off.
 
