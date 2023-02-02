@@ -1,6 +1,8 @@
 alias DiodeSlider d0 # Kit (Light) > Diode Slide
 alias FirstBattery d1 # The battery closest to your base
 alias SecondBattery d2 # Optional second battery type
+alias CableAnalyzer d3 # Optional
+alias LEDLight d4 # Kit (Light) > LED Light, required if you have Cable Analyzer
 
 alias FirstBattCharge r0
 alias Type1Hash r1
@@ -9,9 +11,15 @@ alias Type1Max r3
 alias Type2Max r4
 alias Type1Charge r5
 alias Type2Charge r6
+alias ChargeIn r7
+alias ChargeOut r8
+
+define RED 4
+define GREEN 2
 
 start:
 yield
+bdseal CableAnalyzer systemstate
 l Type1Hash FirstBattery PrefabHash
 lb Type1Max Type1Hash Maximum Sum
 lb Type1Charge Type1Hash Charge Sum
@@ -30,3 +38,18 @@ lb Type2Charge Type2Hash Charge Sum
 add Type1Max Type1Max Type2Max
 add Type1Charge Type1Charge Type2Charge
 j ra
+
+systemstate:
+s LEDLight On 1
+l ChargeIn CableAnalyzer PowerPotential
+l ChargeOut FirstBattery PowerActual
+sub r9 ChargeIn ChargeOut
+s db Setting r9
+move r10 ra
+bgtzal r9 charging
+s LEDLight Color RED
+j ra
+
+charging:
+s LEDLight Color GREEN
+j r10
