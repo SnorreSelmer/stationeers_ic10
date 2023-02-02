@@ -13,7 +13,7 @@ Awesome! My code is probably not perfect, so please file an issue (https://githu
 - **auto_item_sorter.ic10** - Can control multiple sorters to sort out a single PrefabHash per Sorter. Useful for separating ore output from centrifuges.
 - **auto_lights.ic10** - Turns on the lights if you're in a room.
 - **automated_canister_filling.ic10** - Safely fills any canister, and then vacuums out the Canister Holder to prevent exploding canisters.
-- **battery_monitor.ic10** - Displays average charge of a bank of station batteries on a Diode Slide, and lighting it if you're down to your last battery.
+- **battery_monitor.ic10** - Displays average charge of a bank of station batteries on a Diode Slide, and lighting it if you're down to your last battery. It can also take an optional Cable Analyzer and LED light to show if the system is charging (consumption less than production) or discharging.
 - **cooling_tower_drain.ic10** - Isolates a furnace cooling-tower until the temperature is low enough to safely drain.
 - **deep-miner.ic10** - ***!!!Does not work at this time!!!*** Deep Miner automation (works), but the Centrifuge automation doesn't (yet). Filed bug-report, hoping **Slot.Occupied** will become available soon.
 - **filtration.ic10** - Shows if filters need to be replaced, halts filtering if temperature is too high or filterable gas is too low. Based on CowsAreEvil's setup, minus the gas-cooling.
