@@ -33,7 +33,7 @@ s dr0 Mode 2
 ls SlotOccupied dr0 INPUTSLOT Occupied
 beqz SlotOccupied ra
 ls InputItem dr0 INPUTSLOT OccupantHash
-sne IsItem InputItem hash
+seq IsItem InputItem hash
 s dr0 Output IsItem
 j ra
 
