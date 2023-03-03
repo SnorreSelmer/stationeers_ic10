@@ -16,7 +16,7 @@ The address register (ra) is not meant to be written to by the user, it's only u
 
 ## Registers? What are they and how do I use them?
 
-Registers are what most programming languages call variables. But where most programming languages let you create as many variables as you want, MIPS has 18 registers, but only 16 of them are intended for regular use.
+Registers are what most programming languages call variables. But where most programming languages let you create as many variables as you want, MIPS has only 18 registers, and only 16 of them are intended for regular use.
 
 | **Register(s)** | **Alias** | **Purpose**    |
 |-----------------|-----------|----------------|
@@ -65,9 +65,9 @@ This ***s***ets ***CeilingLight***'s ***On*** end-point to the value stored in *
 This may sound a bit cryptic, but bear with me, I'll explain it all a bit further down.
 
 #### Setting with boolean comparisons
-Boolean comparisons are comparisons made to be either true (1) or false (0). These are great at controlling the on/off state of devices like pumps and lights etc.
+Boolean comparisons are comparisons made to be either true (1) or false (0). These are great for controlling the on/off state of devices like pumps and lights etc.
 
-Boolean comparisons are of the type "equal", "equal to zero", "less/great than", "less/greater than zero" and so on.
+Boolean comparisons are of the type "equal", "equal to zero", "less/greater than", "less/greater than zero" and so on.
 
 If you use one of the operators that compare to zero, you do not need to supply two values for comparison, since the instruction already says one of the values will be zero.
 
