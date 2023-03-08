@@ -10,7 +10,7 @@ In Stationeers you have the following available to you:
 - Sixteen registers (r0 through r15)
 - A special address register (ra)
 - A stack (sp) that you can push 512 values into, and pop values out of. The stack is last-in-first-out.
-- A maximum of 128 lines of code, each line has a maximum of 57 characters
+- A maximum of 128 lines of code, each line has a maximum of 52 characters
 
 The address register (ra) is not meant to be written to by the user, it's only used for branching to code that needs to be accessed from multiple areas in your code (functions).
 
@@ -101,7 +101,7 @@ Aha! But setting Power could be like making a dimmer for the light, right? That 
 > 
 > *- Guido Van Rossum (the guy that created the Python programming language)*
 
-While the MIPS implementation in Stationeers has some limitations (128 lines, with a maximum of 57 characters per line), I've rarely run into problems like running out of room. This is mostly because I try not to write "multi-mega-scripts" that do a ton of things. I'm a fan of the UNIX mantra of "do one thing, and do it well". This also means that I use ***aliases*** and ***defines*** a lot. They take more space than just writing things straight up, but they also make the code much easier to read!
+While the MIPS implementation in Stationeers has some limitations (128 lines, with a maximum of 52 characters per line), I've rarely run into problems like running out of room. This is mostly because I try not to write "multi-mega-scripts" that do a ton of things. I'm a fan of the UNIX mantra of "do one thing, and do it well". This also means that I use ***aliases*** and ***defines*** a lot. They take more space than just writing things straight up, but they also make the code much easier to read!
 
 Compare these two lines of code:
 ```
@@ -112,7 +112,7 @@ and
 slt HeaterOn CurrentTemperature MinimumTemperature
 ```
 
-They could do the exact same thing, but the bottom one actually explains what's going on. And it's still shorter than 57 characters.
+They could do the exact same thing, but the bottom one actually explains what's going on. And it's still shorter than 52 characters.
 
 If you're juggling 10+ registers in your code without naming them, the chances of getting them mixed up increases greatly. And if you do make a mistake somewhere, trying to follow the code can be more complicated than if you used named variables.
 
