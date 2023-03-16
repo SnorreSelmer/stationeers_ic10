@@ -95,6 +95,39 @@ Not all end-points can be written to, this makes sense when you think about it.
 
 Aha! But setting Power could be like making a dimmer for the light, right? That would have been nice, but that would more likely be done with an end-point called ***Setting***, which this variant of light doesn't have. To my knowledge, there are no dimmable lights in Stationeers (yet).
 
+## "Moar executions" is not "moar betterer"!
+
+In Stationeers, everything happens in "ticks", and a single tick is 0.5 seconds. But the code we write in ICs can execute much (***much!***) faster than once per tick. But looping over the code many times in a single tick doesn't make it work better, it just "burns resources".
+
+What happens is, each MIPS script is allowed 128 lines of exection per tick. If your script executes one loop totalling 70 lines, you will go through almost two loops in one tick, then the execution is halted until the next tick. If you execute 70 lines in a loop, then you execute the remaining 58 lines this tick, and the script will be at line 59 of the loop when it resumes next tick. This can have unintended consequences. Plus, if you read the pressure from a Gas Sensor 30 times in a tick, the pressure will be the same every time since pressure is only updated by the game *once per tick*.
+
+The solution is to begin or end the loop with `yield`! It doesn't really matter if you put the `yield` as the first or last line in your loop, as long as there is at least one `yield` executed every single tick. This ensures that you start execution at a controlled location next tick.
+
+Good:
+```
+start:
+yield
+l GasPressure GasSensor Pressure
+s GasDisplay Setting GasPressure
+j start
+```
+or
+```
+start:
+l GasPressure GasSensor Pressure
+s GasDisplay Setting GasPressure
+yield
+j start
+```
+
+Bad:
+```
+start:
+l GasPressure GasSensor Pressure
+s GasDisplay Setting GasPressure
+j start
+```
+
 ## Making code more readable!
 
 > **Code is read much more often than it is written.**
