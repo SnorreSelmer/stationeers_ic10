@@ -1,6 +1,4 @@
-# automatic gas-canister filler.
-# only works with player-made cans, starter-cans
-# have different hashes that won't work
+# Automatic gas-canister filler.
 # !!! Remember to set volume pump to no more !!!
 # !!! than 10l! I have mine at 2l for safety !!! 
 

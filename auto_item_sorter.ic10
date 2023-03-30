@@ -1,3 +1,8 @@
+# Controls Sorters to sort items based on hash.
+# Reads item-hashes from stack to decide if it
+# should be split off or passed on.
+# Connect one Sorter to each screw on the IC.
+
 alias counter r0
 move counter 0
 
@@ -8,6 +13,7 @@ alias IsItem r4
 
 define INPUTSLOT 0
 
+# Replace hashes below with the ones you need.
 push 1724793494 # Coal
 push -983091249 # Cobalt
 push -707307845 # Copper
@@ -20,12 +26,15 @@ push -190236170 # Lead
 #push -1516581844 # Uranium
 
 start:
+# Loops over screws to instruct attached Sorters,
+# loops over all sorters every tick.
 bdseal dr0 sort
 add counter counter 1
 bgt counter 5 reset
 j start
 
 sort:
+# Compares Sorter input-slot with hash in stack
 move sp counter
 add sp sp 1
 peek hash
@@ -38,6 +47,7 @@ s dr0 Output IsItem
 j ra
 
 reset:
+# Resets counter to 0 zero so we can loop over again
 move counter 0
 yield
 j start
