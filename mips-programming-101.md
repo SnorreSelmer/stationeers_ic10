@@ -10,13 +10,13 @@ In Stationeers you have the following available to you:
 - Sixteen registers (r0 through r15)
 - A special address register (ra)
 - A stack (sp) that you can push 512 values into, and pop values out of. The stack is last-in-first-out.
-- A maximum of 128 lines of code, each line has a maximum of 57 characters
+- A maximum of 128 lines of code, each line has a maximum of 52 characters
 
 The address register (ra) is not meant to be written to by the user, it's only used for branching to code that needs to be accessed from multiple areas in your code (functions).
 
 ## Registers? What are they and how do I use them?
 
-Registers are what most programming languages call variables. But where most programming languages let you create as many variables as you want, MIPS has 18 registers, but only 16 of them are intended for regular use.
+Registers are what most programming languages call variables. But where most programming languages let you create as many variables as you want, MIPS has only 18 registers, and only 16 of them are intended for regular use.
 
 | **Register(s)** | **Alias** | **Purpose**    |
 |-----------------|-----------|----------------|
@@ -65,9 +65,9 @@ This ***s***ets ***CeilingLight***'s ***On*** end-point to the value stored in *
 This may sound a bit cryptic, but bear with me, I'll explain it all a bit further down.
 
 #### Setting with boolean comparisons
-Boolean comparisons are comparisons made to be either true (1) or false (0). These are great at controlling the on/off state of devices like pumps and lights etc.
+Boolean comparisons are comparisons made to be either true (1) or false (0). These are great for controlling the on/off state of devices like pumps and lights etc.
 
-Boolean comparisons are of the type "equal", "equal to zero", "less/great than", "less/greater than zero" and so on.
+Boolean comparisons are of the type "equal", "equal to zero", "less/greater than", "less/greater than zero" and so on.
 
 If you use one of the operators that compare to zero, you do not need to supply two values for comparison, since the instruction already says one of the values will be zero.
 
@@ -95,13 +95,46 @@ Not all end-points can be written to, this makes sense when you think about it.
 
 Aha! But setting Power could be like making a dimmer for the light, right? That would have been nice, but that would more likely be done with an end-point called ***Setting***, which this variant of light doesn't have. To my knowledge, there are no dimmable lights in Stationeers (yet).
 
+## "Moar executions" is not "moar betterer"!
+
+In Stationeers, everything happens in "ticks", and a single tick is 0.5 seconds. But the code we write in ICs can execute much (***much!***) faster than once per tick. But looping over the code many times in a single tick doesn't make it work better, it just "burns resources".
+
+What happens is, each MIPS script is allowed 128 lines of exection per tick. If your script executes one loop totalling 70 lines, you will go through almost two loops in one tick, then the execution is halted until the next tick. If you execute 70 lines in a loop, then you execute the remaining 58 lines this tick, and the script will be at line 59 of the loop when it resumes next tick. This can have unintended consequences. Plus, if you read the pressure from a Gas Sensor 30 times in a tick, the pressure will be the same every time since pressure is only updated by the game *once per tick*.
+
+The solution is to begin or end the loop with `yield`! It doesn't really matter if you put the `yield` as the first or last line in your loop, as long as there is at least one `yield` executed every single tick. This ensures that you start execution at a controlled location next tick.
+
+Good:
+```
+start:
+yield
+l GasPressure GasSensor Pressure
+s GasDisplay Setting GasPressure
+j start
+```
+or
+```
+start:
+l GasPressure GasSensor Pressure
+s GasDisplay Setting GasPressure
+yield
+j start
+```
+
+Bad:
+```
+start:
+l GasPressure GasSensor Pressure
+s GasDisplay Setting GasPressure
+j start
+```
+
 ## Making code more readable!
 
 > **Code is read much more often than it is written.**
 > 
 > *- Guido Van Rossum (the guy that created the Python programming language)*
 
-While the MIPS implementation in Stationeers has some limitations (128 lines, with a maximum of 57 characters per line), I've rarely run into problems like running out of room. This is mostly because I try not to write "multi-mega-scripts" that do a ton of things. I'm a fan of the UNIX mantra of "do one thing, and do it well". This also means that I use ***aliases*** and ***defines*** a lot. They take more space than just writing things straight up, but they also make the code much easier to read!
+While the MIPS implementation in Stationeers has some limitations (128 lines, with a maximum of 52 characters per line), I've rarely run into problems like running out of room. This is mostly because I try not to write "multi-mega-scripts" that do a ton of things. I'm a fan of the UNIX mantra of "do one thing, and do it well". This also means that I use ***aliases*** and ***defines*** a lot. They take more space than just writing things straight up, but they also make the code much easier to read!
 
 Compare these two lines of code:
 ```
@@ -112,7 +145,7 @@ and
 slt HeaterOn CurrentTemperature MinimumTemperature
 ```
 
-They could do the exact same thing, but the bottom one actually explains what's going on. And it's still shorter than 57 characters.
+They could do the exact same thing, but the bottom one actually explains what's going on. And it's still shorter than 52 characters.
 
 If you're juggling 10+ registers in your code without naming them, the chances of getting them mixed up increases greatly. And if you do make a mistake somewhere, trying to follow the code can be more complicated than if you used named variables.
 
@@ -149,9 +182,9 @@ This ***define***s ***MinimumTemperature*** as ***20*** (maybe for use as 20 Cel
 
 There is also logic for relative jumping in code, and it works by adding an 'r' after the 'b' when branching (so 'b' becomes 'br'). Instead of giving the branch a label to go to, you tell it the number of lines to jump (positive number jumps forwards, negative number jumps backwards).
 
-<div class="level2" id="bkmrk-suffix-prefix-b--b-a"><div class="table sectionedit3"><table class="inline"><thead><tr class="row0"><th class="col0">Suffix</th><th class="col1" colspan="4">Prefix</th></tr></thead><tbody><tr class="row1"><th class="col0" rowspan="2">  
-</th><td class="col1">  
-</td><td class="col2">b-</td><td class="col3">b-al</td><td class="col4">s-</td></tr><tr class="row2"><th class="col0">Description</th><th class="col1">Branch to line</th><th class="col2">Branch to line and store return address</th><th class="col3">Set register</th></tr><tr class="row3"><th class="col0">&lt;none&gt;</th><td class="col1">unconditional</td><td class="col2">j</td><td class="col3">jal</td><td class="col4">s</td></tr><tr class="row4"><th class="col0">-eq</th><td class="col1">if a == b</td><td class="col2">beq</td><td class="col3">beqal</td><td class="col4">seq</td></tr><tr class="row5"><th class="col0">-eqz</th><td class="col1">if a == 0</td><td class="col2">beqz</td><td class="col3">beqzal</td><td class="col4">seqz</td></tr><tr class="row6"><th class="col0">-ge</th><td class="col1">if a &gt;= b</td><td class="col2">bge</td><td class="col3">bgeal</td><td class="col4">sge</td></tr><tr class="row7"><th class="col0">-gez</th><td class="col1">if a &gt;= 0</td><td class="col2">bgez</td><td class="col3">bgezal</td><td class="col4">sgez</td></tr><tr class="row8"><th class="col0">-gt</th><td class="col1">if a &gt; b</td><td class="col2">bgt</td><td class="col3">bgtal</td><td class="col4">sgt</td></tr><tr class="row9"><th class="col0">-gtz</th><td class="col1">if a &gt; 0</td><td class="col2">bgtz</td><td class="col3">bgtzal</td><td class="col4">sgtz</td></tr><tr class="row10"><th class="col0">-le</th><td class="col1">if a ⇐ b</td><td class="col2">ble</td><td class="col3">bleal</td><td class="col4">sle</td></tr><tr class="row11"><th class="col0">-lez</th><td class="col1">if a ⇐ 0</td><td class="col2">blez</td><td class="col3">blezal</td><td class="col4">slez</td></tr><tr class="row12"><th class="col0">-lt</th><td class="col1">if a &lt; b</td><td class="col2">blt</td><td class="col3">bltal</td><td class="col4">slt</td></tr><tr class="row13"><th class="col0">-ltz</th><td class="col1">if a &lt; 0</td><td class="col2">bltz</td><td class="col3">bltzal</td><td class="col4">sltz</td></tr><tr class="row14"><th class="col0">-ne</th><td class="col1">if a != b</td><td class="col2">bne</td><td class="col3">bneal</td><td class="col4">sne</td></tr><tr class="row15"><th class="col0">-nez</th><td class="col1">if a != 0</td><td class="col2">bnez</td><td class="col3">bnezal</td><td class="col4">snez</td></tr><tr class="row16"><th class="col0">-dns</th><td class="col1">if d? is not set</td><td class="col2">bdns</td><td class="col3">bdnsal</td><td class="col4">sdns</td></tr><tr class="row17"><th class="col0">-dse</th><td class="col1">if d? is set</td><td class="col2">bdse</td><td class="col3">bdseal</td><td class="col4">sdse</td></tr><tr class="row18"><th class="col0">-ap</th><td class="col1">if a ~ b</td><td class="col2">bap</td><td class="col3">bapal</td><td class="col4">sap</td></tr><tr class="row19"><th class="col0">-apz</th><td class="col1">if a ~ 0</td><td class="col2">bapz</td><td class="col3">bapzal</td><td class="col4">sapz</td></tr><tr class="row20"><th class="col0">-na</th><td class="col1">if a !~ b</td><td class="col2">bna</td><td class="col3">bnaal</td><td class="col4">sna</td></tr><tr class="row21"><th class="col0">-naz</th><td class="col1">if a !~ 0</td><td class="col2">bnaz</td><td class="col3">bnazal</td><td class="col4">snaz</td></tr></tbody></table>
+<div class="level2" id="bkmrk-suffix-prefix-b--b-a"><div class="table sectionedit3"><table class="inline" style="width: 100.247%;"><thead><tr class="row0"><th class="col0" style="width: 13.2426%;">Stem</th><th style="width: 16.5842%;">Description</th><th class="col1" colspan="2" style="width: 26.8564%;">Prefix</th><th style="width: 43.3168%;">Suffix</th></tr></thead><tbody><tr class="row1"><th class="col0" rowspan="2" style="width: 13.2426%;">  
+</th><td class="col1" rowspan="2" style="width: 16.5842%;">  
+</td><td class="col2" style="width: 9.90099%;">b-</td><td class="col4" style="width: 16.9554%;">s-</td><td class="col3" style="width: 43.3168%;">-al</td></tr><tr class="row2"><th class="col1" style="width: 9.90099%;">Branch to line</th><th class="col3" style="width: 16.9554%;">Set register</th><th class="col2" style="width: 43.3168%;">Branch to line and store return address</th></tr><tr class="row3"><th class="col0" style="width: 13.2426%;">&lt;none&gt;</th><td class="col1" style="width: 16.5842%;">unconditional</td><td class="col2" style="width: 9.90099%;">j</td><td class="col4" style="width: 16.9554%;">s</td><td class="col3" style="width: 43.3168%;">jal</td></tr><tr class="row4"><th class="col0" style="width: 13.2426%;">eq</th><td class="col1" style="width: 16.5842%;">if a == b</td><td class="col2" style="width: 9.90099%;">beq</td><td class="col4" style="width: 16.9554%;">seq</td><td class="col3" style="width: 43.3168%;">beqal</td></tr><tr class="row5"><th class="col0" style="width: 13.2426%;">eqz</th><td class="col1" style="width: 16.5842%;">if a == 0</td><td class="col2" style="width: 9.90099%;">beqz</td><td class="col4" style="width: 16.9554%;">seqz</td><td class="col3" style="width: 43.3168%;">beqzal</td></tr><tr class="row6"><th class="col0" style="width: 13.2426%;">ge</th><td class="col1" style="width: 16.5842%;">if a &gt;= b</td><td class="col2" style="width: 9.90099%;">bge</td><td class="col4" style="width: 16.9554%;">sge</td><td class="col3" style="width: 43.3168%;">bgeal</td></tr><tr class="row7"><th class="col0" style="width: 13.2426%;">gez</th><td class="col1" style="width: 16.5842%;">if a &gt;= 0</td><td class="col2" style="width: 9.90099%;">bgez</td><td class="col4" style="width: 16.9554%;">sgez</td><td class="col3" style="width: 43.3168%;">bgezal</td></tr><tr class="row8"><th class="col0" style="width: 13.2426%;">gt</th><td class="col1" style="width: 16.5842%;">if a &gt; b</td><td class="col2" style="width: 9.90099%;">bgt</td><td class="col4" style="width: 16.9554%;">sgt</td><td class="col3" style="width: 43.3168%;">bgtal</td></tr><tr class="row9"><th class="col0" style="width: 13.2426%;">gtz</th><td class="col1" style="width: 16.5842%;">if a &gt; 0</td><td class="col2" style="width: 9.90099%;">bgtz</td><td class="col4" style="width: 16.9554%;">sgtz</td><td class="col3" style="width: 43.3168%;">bgtzal</td></tr><tr class="row10"><th class="col0" style="width: 13.2426%;">le</th><td class="col1" style="width: 16.5842%;">if a ⇐ b</td><td class="col2" style="width: 9.90099%;">ble</td><td class="col4" style="width: 16.9554%;">sle</td><td class="col3" style="width: 43.3168%;">bleal</td></tr><tr class="row11"><th class="col0" style="width: 13.2426%;">lez</th><td class="col1" style="width: 16.5842%;">if a ⇐ 0</td><td class="col2" style="width: 9.90099%;">blez</td><td class="col4" style="width: 16.9554%;">slez</td><td class="col3" style="width: 43.3168%;">blezal</td></tr><tr class="row12"><th class="col0" style="width: 13.2426%;">lt</th><td class="col1" style="width: 16.5842%;">if a &lt; b</td><td class="col2" style="width: 9.90099%;">blt</td><td class="col4" style="width: 16.9554%;">slt</td><td class="col3" style="width: 43.3168%;">bltal</td></tr><tr class="row13"><th class="col0" style="width: 13.2426%;">ltz</th><td class="col1" style="width: 16.5842%;">if a &lt; 0</td><td class="col2" style="width: 9.90099%;">bltz</td><td class="col4" style="width: 16.9554%;">sltz</td><td class="col3" style="width: 43.3168%;">bltzal</td></tr><tr class="row14"><th class="col0" style="width: 13.2426%;">ne</th><td class="col1" style="width: 16.5842%;">if a != b</td><td class="col2" style="width: 9.90099%;">bne</td><td class="col4" style="width: 16.9554%;">sne</td><td class="col3" style="width: 43.3168%;">bneal</td></tr><tr class="row15"><th class="col0" style="width: 13.2426%;">nez</th><td class="col1" style="width: 16.5842%;">if a != 0</td><td class="col2" style="width: 9.90099%;">bnez</td><td class="col4" style="width: 16.9554%;">snez</td><td class="col3" style="width: 43.3168%;">bnezal</td></tr><tr class="row16"><th class="col0" style="width: 13.2426%;">dns</th><td class="col1" style="width: 16.5842%;">if d? is not set</td><td class="col2" style="width: 9.90099%;">bdns</td><td class="col4" style="width: 16.9554%;">sdns</td><td class="col3" style="width: 43.3168%;">bdnsal</td></tr><tr class="row17"><th class="col0" style="width: 13.2426%;">dse</th><td class="col1" style="width: 16.5842%;">if d? is set</td><td class="col2" style="width: 9.90099%;">bdse</td><td class="col4" style="width: 16.9554%;">sdse</td><td class="col3" style="width: 43.3168%;">bdseal</td></tr><tr class="row18"><th class="col0" style="width: 13.2426%;">ap</th><td class="col1" style="width: 16.5842%;">if a ~ b</td><td class="col2" style="width: 9.90099%;">bap</td><td class="col4" style="width: 16.9554%;">sap</td><td class="col3" style="width: 43.3168%;">bapal</td></tr><tr class="row19"><th class="col0" style="width: 13.2426%;">apz</th><td class="col1" style="width: 16.5842%;">if a ~ 0</td><td class="col2" style="width: 9.90099%;">bapz</td><td class="col4" style="width: 16.9554%;">sapz</td><td class="col3" style="width: 43.3168%;">bapzal</td></tr><tr class="row20"><th class="col0" style="width: 13.2426%;">na</th><td class="col1" style="width: 16.5842%;">if a !~ b</td><td class="col2" style="width: 9.90099%;">bna</td><td class="col4" style="width: 16.9554%;">sna</td><td class="col3" style="width: 43.3168%;">bnaal</td></tr><tr class="row21"><th class="col0" style="width: 13.2426%;">naz</th><td class="col1" style="width: 16.5842%;">if a !~ 0</td><td class="col2" style="width: 9.90099%;">bnaz</td><td class="col4" style="width: 16.9554%;">snaz</td><td class="col3" style="width: 43.3168%;">bnazal</td></tr></tbody></table>
 
 </div></div>
 
