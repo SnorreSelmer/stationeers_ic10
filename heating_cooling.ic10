@@ -5,8 +5,6 @@ alias Thermostat d1
 alias TempDisplay d2
 # d3 = Wall Cooler
 alias WallCooler d3
-# d4 = Wall Heater
-alias WallHeater d4
 
 alias CurrentTemp r0
 alias TargetTemp r1
@@ -15,16 +13,12 @@ alias MaxTemp r3
 alias CoolingActive r4
 alias HeatingActive r5
 alias Cooler r6
-alias Heater r7
 
+define HEATER 24258244
 define TEMPCONVERT 273.15
 define VARIANCE 2
 
-move CoolingActive 0
-move HeatingActive 0
-
 l Cooler WallCooler PrefabHash
-l Heater WallHeater PrefabHash
 
 start:
 yield
@@ -43,11 +37,6 @@ bdseal TempDisplay display
 # initiate cooling or heating if needed
 bgt CurrentTemp MaxTemp cooling
 blt CurrentTemp MinTemp heating
-
-# Ensure coolers and heaters are off when not needed
-sb Cooler On CoolingActive
-sb Heater On HeatingActive
-
 j start
 
 temp_read:
@@ -73,6 +62,9 @@ bdseal TempDisplay display
 sb Cooler On CoolingActive
 
 bgtz CoolingActive cooling
+
+# Turn off wall-coolers when done
+sb Cooler On CoolingActive
 j start
 
 heating:
@@ -86,7 +78,10 @@ slt HeatingActive CurrentTemp TargetTemp
 bdseal TempDisplay display
 
 # send state to heaters
-sb Heater On HeatingActive
+sb HEATER On HeatingActive
 
 bgtz HeatingActive heating
+
+# Turn off wall-heaters when done
+sb HEATER On HeatingActive
 j start
