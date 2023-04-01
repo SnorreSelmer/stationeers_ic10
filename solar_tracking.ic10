@@ -1,5 +1,5 @@
 alias Sensor d0 # Kit (Sensor) > Daylight Sensor
-# Place sensor facing UP, and not in an enclosed space
+# Place daylight-sensor facing UP
 alias Display d1 # Optional, Kit (Console)
 alias PanelType1 d2 # Any controllable Solar Panel
 alias PanelType2 d3 # Optional

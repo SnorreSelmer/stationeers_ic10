@@ -1,4 +1,4 @@
-# Uses a Diode Slide to show battery-bank fill-level.
+# Uses a Diode Slide to show battery-bank levels
 # You can add a Cable Analyzer between generators
 # and batteries so an LED light can show if system
 # is charging or discharging.

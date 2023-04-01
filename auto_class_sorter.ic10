@@ -1,5 +1,7 @@
-# Runs up to six sorters that filter throughput by ItemClass
-# When looking at the outputs, left = ITEMCLASS, right = everything else
+# Runs up to six sorters that filter
+# throughput by ItemClass.
+# When looking at the outputs,
+# left = ITEMCLASS, right = everything else
 
 alias SlotOccupied r0
 alias InputClass r1
@@ -8,7 +10,7 @@ alias SorterCounter r3
 
 move SorterCounter 0
 
-define ITEMCLASS 19 # 10=ores, 19=ingots, 33=wrekage
+define ITEMCLASS 19 # 10=ores,19=ingots,33=wrekage
 define INPUTSLOT 0 # sorter input-slot
 
 start:
@@ -19,10 +21,12 @@ j start
 
 sort:
 s dr3 Mode 2 # set sorter to IC mode
-ls SlotOccupied dr3 INPUTSLOT Occupied # check if anything to sort
+# check if anything to sort
+ls SlotOccupied dr3 INPUTSLOT Occupied 
 beqz SlotOccupied ra
 ls InputClass dr3 INPUTSLOT Class
-seq IsClass InputClass ITEMCLASS # change seq to sne to swap output ports
+# change seq to sne to swap output ports
+seq IsClass InputClass ITEMCLASS
 s dr3 Output IsClass
 j ra
 

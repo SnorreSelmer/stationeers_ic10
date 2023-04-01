@@ -1,5 +1,5 @@
-# Connect mush-pipe to Heat Exchanger, use Digital Valve
-# to expose heat-exchanger to radiators
+# Connect mush-pipe to Heat Exchanger, use Digital
+# Valve to expose heat-exchanger to radiators
 
 alias PipeAnalyzer d0
 alias DigitalValve d1

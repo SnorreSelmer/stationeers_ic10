@@ -47,7 +47,7 @@ s dr0 Output IsItem
 j ra
 
 reset:
-# Resets counter to 0 zero so we can loop over again
+# Resets counter to zero so we can loop over again
 move counter 0
 yield
 j start
