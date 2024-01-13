@@ -14,16 +14,16 @@ alias IsItem r4
 define INPUTSLOT 0
 
 # Replace hashes below with the ones you need.
-push 1724793494 # Coal
-push -983091249 # Cobalt
-push -707307845 # Copper
-push -1348105509 # Gold
 push 1758427767 # Iron
-push -190236170 # Lead
+push -1348105509 # Gold
+push -1516581844 # Uranium
+push -707307845 # Copper
+push 1724793494 # Coal
+push -916518678 # Silver
 #push 1830218956 # Nickel
+¤push -190236170 # Lead
 #push 1103972403 # Silicon
-#push -916518678 # Silver
-#push -1516581844 # Uranium
+¤push -983091249 # Cobalt
 
 start:
 # Loops over screws to instruct attached Sorters,
