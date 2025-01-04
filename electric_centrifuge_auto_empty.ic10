@@ -1,0 +1,34 @@
+# This script loops through up to six centrifuges per chip,
+# checking for ERROR state (because the centrifuge is full),
+# opens the centrifuge, and moves on to checking the next
+# centrifuge. Once a centrifuge is empty, it closes and starts
+# up again. All six centrifuges are managed every tick.
+
+alias counter r0
+move counter 0
+
+alias error r1
+alias reagentCount r2
+
+loop:
+bdseal dr0 check
+add counter counter 1
+bgt counter 5 reset
+j loop
+
+check:
+l error dr0 Error
+bgtz error empty
+j ra
+
+empty:
+s dr0 Open 1
+l reagentCount dr0 Reagents
+bgtz reagentCount ra
+s dr0 Open 0
+j ra
+
+reset:
+move counter 0
+yield
+j loop
