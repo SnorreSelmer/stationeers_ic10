@@ -24,7 +24,7 @@ alias InMolsCompare r11
 alias TotalMols r12
 alias OutPressure r13
 
-define MAXPRESSURE 58000 # Storage pressure kPa
+define MAXPRESSURE 5800 # Storage pressure kPa
 define INPUTAMOUNT 2  # Moles to activate
 define MAXTEMPERATURE 313.15 # 40C
 

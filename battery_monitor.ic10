@@ -6,7 +6,6 @@
 # series (battery output -> battery input).
 # FirstBattery is the battery that faces your base.
 
-
 # Kit (Light) > Diode Slide
 alias DiodeSlider d0
 # Battery closest to your base
