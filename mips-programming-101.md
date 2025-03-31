@@ -1,8 +1,8 @@
-# MIPS Programming 101
+# IC10 Programming 101
 
 ## Introduction
 
-MIPS is a pretty basic assembler programming language.
+IC10 is a pretty basic assembler programming language, inpired by MIPS.
 
 In Stationeers you have the following available to you:
 
@@ -16,7 +16,7 @@ The address register (ra) is not meant to be written to by the user, it's only u
 
 ## Registers? What are they and how do I use them?
 
-Registers are what most programming languages call variables. But where most programming languages let you create as many variables as you want, MIPS has only 18 registers, and only 16 of them are intended for regular use.
+Registers are what most programming languages call variables. But where most programming languages let you create as many variables as you want, IC10 has only 18 registers, and only 16 of them are intended for regular use.
 
 | **Register(s)** | **Alias** | **Purpose**    |
 |-----------------|-----------|----------------|
@@ -44,7 +44,7 @@ This ***l***oads ***Pressure*** from ***GasSensor***, and stores it into ***r0**
 
 ## Load? Set? What?
 
-In MIPS, two of the functions you'll use the most are ***l*** and ***s***. ***s*** also has a lot of logical comparators you can use to do boolean operations on the input.
+In IC10, two of the functions you'll use the most are ***l*** and ***s***. ***s*** also has a lot of logical comparators you can use to do boolean operations on the input.
 
 In short, ***l*** loads data from devices to registers, ***s*** sets (or saves) data from registers to registers or devices.
 
@@ -99,7 +99,7 @@ Aha! But setting Power could be like making a dimmer for the light, right? That 
 
 In Stationeers, everything happens in "ticks", and a single tick is 0.5 seconds. But the code we write in ICs can execute much (***much!***) faster than once per tick. But looping over the code many times in a single tick doesn't make it work better, it just "burns resources".
 
-What happens is, each MIPS script is allowed 128 lines of exection per tick. If your script executes one loop totalling 70 lines, you will go through almost two loops in one tick, then the execution is halted until the next tick. If you execute 70 lines in a loop, then you execute the remaining 58 lines this tick, and the script will be at line 59 of the loop when it resumes next tick. This can have unintended consequences. Plus, if you read the pressure from a Gas Sensor 30 times in a tick, the pressure will be the same every time since pressure is only updated by the game *once per tick*.
+What happens is, each IC10 script is allowed 128 lines of exection per tick. If your script executes one loop totalling 70 lines, you will go through almost two loops in one tick, then the execution is halted until the next tick. If you execute 70 lines in a loop, then you execute the remaining 58 lines this tick, and the script will be at line 59 of the loop when it resumes next tick. This can have unintended consequences. Plus, if you read the pressure from a Gas Sensor 30 times in a tick, the pressure will be the same every time since pressure is only updated by the game *once per tick*.
 
 The solution is to begin or end the loop with `yield`! It doesn't really matter if you put the `yield` as the first or last line in your loop, as long as there is at least one `yield` executed every single tick. This ensures that you start execution at a controlled location next tick.
 
@@ -134,7 +134,7 @@ j start
 > 
 > *- Guido Van Rossum (the guy that created the Python programming language)*
 
-While the MIPS implementation in Stationeers has some limitations (128 lines, with a maximum of 90 characters per line), I've rarely run into problems like running out of room. This is mostly because I try not to write "multi-mega-scripts" that do a ton of things. I'm a fan of the UNIX mantra of "do one thing, and do it well". This also means that I use ***aliases*** and ***defines*** a lot. They take more space than just writing things straight up, but they also make the code much easier to read!
+While the IC10 implementation in Stationeers has some limitations (128 lines, with a maximum of 90 characters per line), I've rarely run into problems like running out of room. This is mostly because I try not to write "multi-mega-scripts" that do a ton of things. I'm a fan of the UNIX mantra of "do one thing, and do it well". This also means that I use ***aliases*** and ***defines*** a lot. They take more space than just writing things straight up, but they also make the code much easier to read!
 
 Compare these two lines of code:
 ```
