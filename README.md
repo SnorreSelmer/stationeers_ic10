@@ -13,7 +13,7 @@ Awesome! My code is probably not perfect, so please file an issue (https://githu
 - **auto_arc_furnace.ic10** - As long as there's ore in the input, the Arc Furnace will smelt.
 - **auto_class_sorter.ic10** - Can control multiple sorters to sort out a single itemClass. Useful for looping ingots between printers, and then splitting out the printed items.
 - **auto_item_sorter.ic10** - Can control multiple sorters to sort out a single PrefabHash per Sorter. Useful for separating ore output from centrifuges.
-- **auto_lights.ic10** - Turns on the lights if you're in a room.
+- **auto_lights.ic10** - Turns on the lights if you're in a room. (Useless now, just use a Sensor (Room Occupancy) and a Logic (Reader) and Logic (Batch Writer) instead.)
 - **automated_canister_filling.ic10** - Safely fills any canister, and then vacuums out the Canister Holder to prevent exploding canisters.
 - **battery_monitor.ic10** - Displays average charge of a bank of station batteries on a Diode Slide, and lighting it if you're down to your last battery. It can also take an optional Cable Analyzer and LED light to show if the system is charging (consumption less than production) or discharging.
 - **cooling_tower_drain.ic10** - Isolates a furnace cooling-tower until the temperature is low enough to safely drain.
