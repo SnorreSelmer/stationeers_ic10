@@ -1,6 +1,6 @@
 # This script loops through up to six centrifuges
 # per chip, checking for ERROR state (because the
-# centrifuge is full), # opens the centrifuge, and
+# centrifuge is full), opens the centrifuge, and
 # moves on to checking the next centrifuge. Once a
 # centrifuge is empty, it closes and starts up
 # again. All six centrifuges are managed every tick.
