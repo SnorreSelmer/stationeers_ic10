@@ -103,7 +103,7 @@ Not all end-points can be written to, this makes sense when you think about it.
 
 Aha! But setting Power could be like making a dimmer for the light, right? That would have been nice, but that would more likely be done with an end-point called ***Setting***, which this variant of light doesn't have. To my knowledge, there are no dimmable lights in Stationeers (yet).
 
-## "Moar executions" is not "moar betterer"!
+## "Moar executions" is not "moar betterer"
 
 In Stationeers, everything happens in "ticks", and a single tick is 0.5 seconds. But the code we write in ICs can execute much (***much!***) faster than once per tick. But looping over the code many times in a single tick doesn't make it work better, it just "burns resources".
 
@@ -140,7 +140,7 @@ s GasDisplay Setting GasPressure
 j start
 ```
 
-## Making code more readable!
+## Making code more readable
 
 > **Code is read much more often than it is written.**
 >
@@ -198,11 +198,29 @@ This ***define***s ***MinimumTemperature*** as ***20*** (for use as 20 Celsius i
 
 There is also logic for relative jumping in code, and it works by adding an `r` after the `b` when branching (so `b` becomes `br`). Instead of giving the branch a label to go to, you tell it the number of lines to jump (positive number jumps forwards, negative number jumps backwards).
 
-<div class="level2" id="bkmrk-suffix-prefix-b--b-a"><div class="table sectionedit3"><table class="inline" style="width: 100.247%;"><thead><tr class="row0"><th class="col0" style="width: 13.2426%;">Stem</th><th style="width: 16.5842%;">Description</th><th class="col1" colspan="2" style="width: 26.8564%;">Prefix</th><th style="width: 43.3168%;">Suffix</th></tr></thead><tbody><tr class="row1"><th class="col0" rowspan="2" style="width: 13.2426%;">  
-</th><td class="col1" rowspan="2" style="width: 16.5842%;">  
-</td><td class="col2" style="width: 9.90099%;">b-</td><td class="col4" style="width: 16.9554%;">s-</td><td class="col3" style="width: 43.3168%;">-al</td></tr><tr class="row2"><th class="col1" style="width: 9.90099%;">Branch to line</th><th class="col3" style="width: 16.9554%;">Set register</th><th class="col2" style="width: 43.3168%;">Branch to line and store return address</th></tr><tr class="row3"><th class="col0" style="width: 13.2426%;">&lt;none&gt;</th><td class="col1" style="width: 16.5842%;">unconditional</td><td class="col2" style="width: 9.90099%;">j</td><td class="col4" style="width: 16.9554%;">s</td><td class="col3" style="width: 43.3168%;">jal</td></tr><tr class="row4"><th class="col0" style="width: 13.2426%;">eq</th><td class="col1" style="width: 16.5842%;">if a == b</td><td class="col2" style="width: 9.90099%;">beq</td><td class="col4" style="width: 16.9554%;">seq</td><td class="col3" style="width: 43.3168%;">beqal</td></tr><tr class="row5"><th class="col0" style="width: 13.2426%;">eqz</th><td class="col1" style="width: 16.5842%;">if a == 0</td><td class="col2" style="width: 9.90099%;">beqz</td><td class="col4" style="width: 16.9554%;">seqz</td><td class="col3" style="width: 43.3168%;">beqzal</td></tr><tr class="row6"><th class="col0" style="width: 13.2426%;">ge</th><td class="col1" style="width: 16.5842%;">if a &gt;= b</td><td class="col2" style="width: 9.90099%;">bge</td><td class="col4" style="width: 16.9554%;">sge</td><td class="col3" style="width: 43.3168%;">bgeal</td></tr><tr class="row7"><th class="col0" style="width: 13.2426%;">gez</th><td class="col1" style="width: 16.5842%;">if a &gt;= 0</td><td class="col2" style="width: 9.90099%;">bgez</td><td class="col4" style="width: 16.9554%;">sgez</td><td class="col3" style="width: 43.3168%;">bgezal</td></tr><tr class="row8"><th class="col0" style="width: 13.2426%;">gt</th><td class="col1" style="width: 16.5842%;">if a &gt; b</td><td class="col2" style="width: 9.90099%;">bgt</td><td class="col4" style="width: 16.9554%;">sgt</td><td class="col3" style="width: 43.3168%;">bgtal</td></tr><tr class="row9"><th class="col0" style="width: 13.2426%;">gtz</th><td class="col1" style="width: 16.5842%;">if a &gt; 0</td><td class="col2" style="width: 9.90099%;">bgtz</td><td class="col4" style="width: 16.9554%;">sgtz</td><td class="col3" style="width: 43.3168%;">bgtzal</td></tr><tr class="row10"><th class="col0" style="width: 13.2426%;">le</th><td class="col1" style="width: 16.5842%;">if a ⇐ b</td><td class="col2" style="width: 9.90099%;">ble</td><td class="col4" style="width: 16.9554%;">sle</td><td class="col3" style="width: 43.3168%;">bleal</td></tr><tr class="row11"><th class="col0" style="width: 13.2426%;">lez</th><td class="col1" style="width: 16.5842%;">if a ⇐ 0</td><td class="col2" style="width: 9.90099%;">blez</td><td class="col4" style="width: 16.9554%;">slez</td><td class="col3" style="width: 43.3168%;">blezal</td></tr><tr class="row12"><th class="col0" style="width: 13.2426%;">lt</th><td class="col1" style="width: 16.5842%;">if a &lt; b</td><td class="col2" style="width: 9.90099%;">blt</td><td class="col4" style="width: 16.9554%;">slt</td><td class="col3" style="width: 43.3168%;">bltal</td></tr><tr class="row13"><th class="col0" style="width: 13.2426%;">ltz</th><td class="col1" style="width: 16.5842%;">if a &lt; 0</td><td class="col2" style="width: 9.90099%;">bltz</td><td class="col4" style="width: 16.9554%;">sltz</td><td class="col3" style="width: 43.3168%;">bltzal</td></tr><tr class="row14"><th class="col0" style="width: 13.2426%;">ne</th><td class="col1" style="width: 16.5842%;">if a != b</td><td class="col2" style="width: 9.90099%;">bne</td><td class="col4" style="width: 16.9554%;">sne</td><td class="col3" style="width: 43.3168%;">bneal</td></tr><tr class="row15"><th class="col0" style="width: 13.2426%;">nez</th><td class="col1" style="width: 16.5842%;">if a != 0</td><td class="col2" style="width: 9.90099%;">bnez</td><td class="col4" style="width: 16.9554%;">snez</td><td class="col3" style="width: 43.3168%;">bnezal</td></tr><tr class="row16"><th class="col0" style="width: 13.2426%;">dns</th><td class="col1" style="width: 16.5842%;">if d? is not set</td><td class="col2" style="width: 9.90099%;">bdns</td><td class="col4" style="width: 16.9554%;">sdns</td><td class="col3" style="width: 43.3168%;">bdnsal</td></tr><tr class="row17"><th class="col0" style="width: 13.2426%;">dse</th><td class="col1" style="width: 16.5842%;">if d? is set</td><td class="col2" style="width: 9.90099%;">bdse</td><td class="col4" style="width: 16.9554%;">sdse</td><td class="col3" style="width: 43.3168%;">bdseal</td></tr><tr class="row18"><th class="col0" style="width: 13.2426%;">ap</th><td class="col1" style="width: 16.5842%;">if a ~ b</td><td class="col2" style="width: 9.90099%;">bap</td><td class="col4" style="width: 16.9554%;">sap</td><td class="col3" style="width: 43.3168%;">bapal</td></tr><tr class="row19"><th class="col0" style="width: 13.2426%;">apz</th><td class="col1" style="width: 16.5842%;">if a ~ 0</td><td class="col2" style="width: 9.90099%;">bapz</td><td class="col4" style="width: 16.9554%;">sapz</td><td class="col3" style="width: 43.3168%;">bapzal</td></tr><tr class="row20"><th class="col0" style="width: 13.2426%;">na</th><td class="col1" style="width: 16.5842%;">if a !~ b</td><td class="col2" style="width: 9.90099%;">bna</td><td class="col4" style="width: 16.9554%;">sna</td><td class="col3" style="width: 43.3168%;">bnaal</td></tr><tr class="row21"><th class="col0" style="width: 13.2426%;">naz</th><td class="col1" style="width: 16.5842%;">if a !~ 0</td><td class="col2" style="width: 9.90099%;">bnaz</td><td class="col4" style="width: 16.9554%;">snaz</td><td class="col3" style="width: 43.3168%;">bnazal</td></tr></tbody></table>
-
-</div></div>
+| Stem    | Description         | Prefix:             |                  | Suffix: -al                                 |
+|---------|---------------------|---------------------|------------------|---------------------------------------------|
+|         |                     | **b-**              | **s-**           |                                             |
+|         |                     | **Branch to line**  | **Set register** | **Branch to line and store return address** |
+| (none)  | unconditional       | j                   | s                | jal                                         |
+| eq      | if a == b           | beq                 | seq              | beqal                                       |
+| eqz     | if a == 0           | beqz                | seqz             | beqzal                                      |
+| ge      | if a >= b           | bge                 | sge              | bgeal                                       |
+| gez     | if a >= 0           | bgez                | sgez             | bgezal                                      |
+| gt      | if a > b            | bgt                 | sgt              | bgtal                                       |
+| gtz     | if a > 0            | bgtz                | sgtz             | bgtzal                                      |
+| le      | if a <= b           | ble                 | sle              | bleal                                       |
+| lez     | if a <= 0           | blez                | slez             | blezal                                      |
+| lt      | if a < b            | blt                 | slt              | bltal                                       |
+| ltz     | if a < 0            | bltz                | sltz             | bltzal                                      |
+| ne      | if a != b           | bne                 | sne              | bneal                                       |
+| nez     | if a != 0           | bnez                | snez             | bnezal                                      |
+| dns     | if d? is not set    | bdns                | sdns             | bdnsal                                      |
+| dse     | if d? is set        | bdse                | sdse             | bdseal                                      |
+| ap      | if a ~ b            | bap                 | sap              | bapal                                       |
+| apz     | if a ~ 0            | bapz                | sapz             | bapzal                                      |
+| na      | if a !~ b           | bna                 | sna              | bnaal                                       |
+| naz     | if a !~ 0           | bnaz                | snaz             | bnazal                                      |
 
 ## Indirect referencing
 

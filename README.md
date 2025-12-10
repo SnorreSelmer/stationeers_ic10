@@ -17,4 +17,4 @@ Awesome! My code is probably not perfect, so please file an [issue](https://gith
 Not all the old scripts had any purpose anymore due to changes in the game, so I'll be going over them all to fix things that no longer work, and retiring scripts that are no longer needed.  
 Once done, the [/old-scripts/](/old-scripts/) folder will be removed forever. External linking to this folder is not recommended!
 
-- [phase-change-heat-dump.ic10](/scripts/phase-change-heat-dump.ic10) : Used to control a Digital Valve to manage heat-dumping from a phase-change cooling setup
+- [phase-change-heat-dump.ic10](/scripts/phase-change-heat-dump.ic10) : Used to control a Digital Valve to manage heat-dumping from a phase-change cooling setup.
