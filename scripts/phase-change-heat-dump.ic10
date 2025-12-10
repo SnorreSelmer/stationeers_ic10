@@ -1,0 +1,24 @@
+# This script is used to open and close a Digital Valve to dump heat from a
+# Condensation Chamber to Europa atmosphere.
+# Haven't tested it on Mars, but I assume it will just open the valve and leave it open.
+# I assume it will work the same as on Europa for vacuum worlds.
+
+alias condenser d0
+alias valve d1
+alias temp r0
+alias tempTarget r1
+alias valveState r2
+
+define lowThresh 223.15 # -50C, non-freezing temp for Pollutants
+define highThresh 323.15 # +50C
+
+move tempTarget highThresh
+
+start:
+yield
+l temp condenser Temperature
+sgt valveState temp tempTarget
+select tempTarget valveState lowThresh highThresh
+s db Setting tempTarget # For debugging, not really needed
+s valve On valveState
+j start
