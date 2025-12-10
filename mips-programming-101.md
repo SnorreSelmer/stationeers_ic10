@@ -36,7 +36,7 @@ In game-terms, registers are where you store things like pressure from a Gas Sen
 
 If you want to read the pressure from a Gas Sensor, you'd use the following bit of code:
 
-```
+```mips
 l r0 GasSensor Pressure
 ```
 
@@ -51,37 +51,45 @@ In short, ***l*** loads data from devices to registers, ***s*** sets (or saves) 
 ### Examples
 
 #### Loading
-```
+
+```mips
 l r0 GasSensor Pressure
 ```
+
 This ***l***oads ***Pressure*** from ***GasSensor*** into ***r0***.
 
 #### Setting
-```
+
+```mips
 s CeilingLight On r0
 ```
+
 This ***s***ets ***CeilingLight***'s ***On*** end-point to the value stored in ***r0***.
 
 This may sound a bit cryptic, but bear with me, I'll explain it all a bit further down.
 
 #### Setting with boolean comparisons
+
 Boolean comparisons are comparisons made to be either true (1) or false (0). These are great for controlling the on/off state of devices like pumps and lights etc.
 
 Boolean comparisons are of the type "equal", "equal to zero", "less/greater than", "less/greater than zero" and so on.
 
 If you use one of the operators that compare to zero, you do not need to supply two values for comparison, since the instruction already says one of the values will be zero.
 
-```
+```mips
 sgt r2 CurrentPressure MaxPressure
 ```
+
 This ***s***ets a 1 (true) in ***r2*** if ***CurrentPressure*** is ***g***reater ***t***han ***MaxPressure***, or a 0 (false) in r2 if it's not.
 
-```
+```mips
 sgtz r2 CurrentTemperature
 ```
+
 This ***s***ets a 1 (true) in ***r2*** if ***CurrentTemperature*** is ***g***reater ***t***han ***z***ero, or a 0 (false) in r2 if it's not.
 
 ### Data end-points, and what can be loaded/set?
+
 When you want to automate something, the Stationpedia is your best friend! It contains a catalogue of all the things you can make, and lists all the data you can *load from* and/or *set to* it. Here's an example:
 
 ![Stationpedia page for a Kit(Wall Light)](/images/data-end-points.png)
@@ -104,15 +112,18 @@ What happens is, each IC10 script is allowed 128 lines of exection per tick. If 
 The solution is to begin or end the loop with `yield`! It doesn't really matter if you put the `yield` as the first or last line in your loop, as long as there is at least one `yield` executed every single tick. This ensures that you start execution at a controlled location next tick.
 
 Good:
-```
+
+```mips
 start:
 yield
 l GasPressure GasSensor Pressure
 s GasDisplay Setting GasPressure
 j start
 ```
+
 or
-```
+
+```mips
 start:
 l GasPressure GasSensor Pressure
 s GasDisplay Setting GasPressure
@@ -121,7 +132,8 @@ j start
 ```
 
 Bad:
-```
+
+```mips
 start:
 l GasPressure GasSensor Pressure
 s GasDisplay Setting GasPressure
@@ -131,17 +143,20 @@ j start
 ## Making code more readable!
 
 > **Code is read much more often than it is written.**
-> 
+>
 > *- Guido Van Rossum (the guy that created the Python programming language)*
 
 While the IC10 implementation in Stationeers has some limitations (128 lines, with a maximum of 90 characters per line), I've rarely run into problems like running out of room. This is mostly because I try not to write "multi-mega-scripts" that do a ton of things. I'm a fan of the UNIX mantra of "do one thing, and do it well". This also means that I use ***aliases*** and ***defines*** a lot. They take more space than just writing things straight up, but they also make the code much easier to read!
 
 Compare these two lines of code:
-```
+
+```mips
 slt r2 r0 r1
 ```
+
 and
-```
+
+```mips
 slt HeaterOn CurrentTemperature MinimumTemperature
 ```
 
@@ -155,28 +170,29 @@ This is not to say that you *have* to name variables. It's up to you.
 
 Making an ***alias*** is the act of giving a register or a device a more human-readable name. For devices, this has the added benefit of naming the pins on the IC housing, making it easier to remember what devices goes on what pin when you set up the housing.
 
-```
+```mips
 alias Furnace d0
 alias FurnaceTemperature r0
 ```
 
 This gives the device on pin ***d0*** the ***alias*** (name) ***Furnace***, and the register ***r0*** the ***alias*** (name) ***FurnaceTemperature***. In the code you can now refer to Furnace instead of d0, and FurnaceTemperature instead of r0. Like this:
 
-```
+```mips
 l FurnaceTemperature Furnace Temperature
 ```
 
 This loads the ***Temperature*** in the ***Furnace (d0)*** into ***FurnaceTemperature (r0)***.
 
 ### Define
+
 A define is what we in other programming languages would call a constant. As the name implies, a constant is ... constant. It never changes. This is great for threshold-values and item-hashes (a unique number given to each type of item in the game, used for comparing items in sorting, and for reading from or writing to a lot of identical items, called batch-reading/-writing).
 
-```
+```mips
 define MinimumTemperature 20
 define KelvinConvert 273.15
 ```
 
-This ***define***s ***MinimumTemperature*** as ***20*** (maybe for use as 20 Celsius in a temperature control circuit), and ***define***s ***KelvinConvert*** (the conversion-number from Kelvin to Celsius) as ***273.15***.
+This ***define***s ***MinimumTemperature*** as ***20*** (for use as 20 Celsius in a temperature control circuit), and ***define***s ***KelvinConvert*** (the conversion-number from Kelvin to Celsius) as ***273.15***.
 
 ## Branch/set matrix
 
@@ -193,7 +209,8 @@ There is also logic for relative jumping in code, and it works by adding an `r` 
 Indirect referencing is when you use the value in one register to determine what other register or device to interact with.
 
 It looks like this:
-```
+
+```mips
 move r0 2
 l r1 dr0 Setting
 ```
@@ -202,7 +219,7 @@ The indirect referencing is the `dr0` part. You can read it as `d(r0)`, which me
 
 If you want, you can reference multiple times in the same reference, but that gets unreadable *fast!*
 
-```
+```mips
 move r0 7
 move r1 2
 move r2 0
