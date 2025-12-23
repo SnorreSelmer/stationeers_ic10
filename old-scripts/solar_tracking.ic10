@@ -20,13 +20,14 @@ define PANELPOWERANGLE 90
 sub CorrectionAngle SENSORDATAANGLE PANELPOWERANGLE
 sub CorrectionAngle CorrectionAngle 90
 
-# load panel PrefabHash for later use
+# load solar-panel PrefabHash for later use
 l Panel1Hash PanelType1 PrefabHash
-bdns PanelType2 start
+bdns PanelType2 display # check if PanelType2 exists
 l Panel2Hash PanelType2 PrefabHash
 
-# set Display to Power-mode
-bdns Display start
+display:
+# set Display to Power-mode (Watts)
+bdns Display start # check if Display exists
 s Display Mode 2
 
 start:
@@ -48,7 +49,7 @@ s Display Setting PanelOutput1
 panelmove:
 sb Panel1Hash Vertical AngleVertical
 sb Panel1Hash Horizontal AngleHorizontal
-bdns PanelType2 start
+bdns PanelType2 start # check if PanelType2 exists
 sb Panel2Hash Vertical AngleVertical
 sb Panel2Hash Horizontal AngleHorizontal
 
