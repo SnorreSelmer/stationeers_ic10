@@ -12,6 +12,7 @@ s Siren Mode 10 # "Alarm8"
 
 start:
 yield
+s Readout Color Color.Green
 l StormMode Weather Mode # check weather
 s Announcer On 0 # reset Announcer
 beq StormMode 1 countdown # countdown if incoming
@@ -19,6 +20,7 @@ j start # else return to start
 
 countdown:
 yield
+s Readout Color Color.Orange
 l StormMode Weather Mode # check weather
 s Announcer On 1 # announce storm
 # get countdown value
