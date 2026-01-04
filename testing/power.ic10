@@ -1,0 +1,77 @@
+# This script displays avearage and peak power from wind and solar power sources.
+# It is only for gathering data, not for any useful in-game purpose.
+
+alias averageTallDisplay d0
+alias averageShortDisplay d1
+alias averageSolarDisplay d2
+alias peakTallDisplay d3
+alias peakShortDisplay d4
+alias peakSolarDisplay d5
+
+alias totalTall r0
+alias totalShort r1
+alias totalSolar r2
+alias counter r3
+alias peakTall r4
+alias peakShort r5
+alias peakSolar r6
+alias averageTall r7
+alias averageShort r8
+alias averageSolar r9
+
+move r0 0
+move r1 0
+move r2 0
+move r3 0
+move r4 0
+move r5 0
+move r6 0
+move r7 0
+move r8 0
+move r9 0
+
+define tall -2082355173 # ID of tall wind turbine
+define short 1622183451 # ID of short wind turbine
+define solar -934345724 # ID of heavy solar panel
+
+s averageShortDisplay Mode 2
+s averageTallDisplay Mode 2
+s averageSolarDisplay Mode 2
+s peakTallDisplay Mode 2
+s peakShortDisplay Mode 2
+s peakSolarDisplay Mode 2
+
+start:
+yield
+lb r13 tall PowerGeneration Maximum
+add totalTall totalTall r13
+lb r14 short PowerGeneration Maximum
+add totalShort totalShort r14
+lb r15 solar Charge Maximum
+add totalSolar totalSolar r15
+add counter counter 1
+div averageTall totalTall counter
+div averageShort totalShort counter
+div averageSolar totalSolar counter
+bgtal r13 peakTall startPeakTall
+bgtal r14 peakShort startPeakShort
+bgtal r15 peakSolar startPeakSolar
+s averageTallDisplay Setting averageTall
+s averageShortDisplay Setting averageShort
+s averageSolarDisplay Setting averageSolar
+s peakTallDisplay Setting peakTall
+s peakShortDisplay Setting peakShort
+s peakSolarDisplay Setting peakSolar
+j start
+
+startPeakTall:
+move peakTall r13
+j ra
+
+startPeakShort:
+move peakShort r14
+j ra
+
+startPeakSolar:
+move peakSolar r15
+j ra
