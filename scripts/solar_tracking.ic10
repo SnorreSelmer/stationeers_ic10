@@ -13,7 +13,7 @@ alias PanelOutput1 r5
 alias PanelOutput2 r6
 
 # define directions of sensor and panel power ports
-define SENSORDATAANGLE 0
+define SENSORDATAANGLE 180
 define PANELPOWERANGLE 90
 
 # calculate horizontal correction
