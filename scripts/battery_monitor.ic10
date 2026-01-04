@@ -28,9 +28,6 @@ alias Type2Charge r6
 alias ChargeIn r7
 alias ChargeOut r8
 
-define RED 4
-define GREEN 2
-
 start:
 yield
 # Checks charge/discharge state if CA connected
@@ -72,9 +69,9 @@ l ChargeIn CableAnalyzer PowerPotential
 l ChargeOut FirstBattery PowerActual
 sub r9 ChargeIn ChargeOut
 bgtz r9 charging
-s LEDLight Color RED
+s LEDLight Color Color.Red
 j ra
 
 charging:
-s LEDLight Color GREEN
+s LEDLight Color Color.Green
 j ra
