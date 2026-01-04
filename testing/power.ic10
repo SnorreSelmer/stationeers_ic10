@@ -32,12 +32,12 @@ move r7 0
 move r8 0
 move r9 0
 move r10 0
-move r11 0 # initialize prevState to invalid value
+move r11 0
 
 define tall -2082355173 # ID of tall wind turbine
 define short 1622183451 # ID of short wind turbine
 define solar -934345724 # ID of heavy solar panel
-define weather 1997212478 # ID of weather sensor
+define weather 1997212478 # ID of weather station
 
 s averageShortDisplay Mode 2
 s averageTallDisplay Mode 2
