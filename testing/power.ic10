@@ -18,6 +18,8 @@ alias peakSolar r6
 alias averageTall r7
 alias averageShort r8
 alias averageSolar r9
+alias currState r10
+alias prevState r11
 
 move r0 0
 move r1 0
@@ -29,10 +31,13 @@ move r6 0
 move r7 0
 move r8 0
 move r9 0
+move r10 0
+move r11 0 # initialize prevState to invalid value
 
 define tall -2082355173 # ID of tall wind turbine
 define short 1622183451 # ID of short wind turbine
 define solar -934345724 # ID of heavy solar panel
+define weather 1997212478 # ID of weather sensor
 
 s averageShortDisplay Mode 2
 s averageTallDisplay Mode 2
@@ -43,6 +48,9 @@ s peakSolarDisplay Mode 2
 
 start:
 yield
+lb currState weather Mode Maximum
+seq currState currState 2
+bneal currState prevState changePlaces
 lb r13 tall PowerGeneration Maximum
 add totalTall totalTall r13
 lb r14 short PowerGeneration Maximum
@@ -62,6 +70,7 @@ s averageSolarDisplay Setting averageSolar
 s peakTallDisplay Setting peakTall
 s peakShortDisplay Setting peakShort
 s peakSolarDisplay Setting peakSolar
+move prevState currState
 j start
 
 startPeakTall:
@@ -74,4 +83,24 @@ j ra
 
 startPeakSolar:
 move peakSolar r15
+j ra
+
+changePlaces:
+mul sp prevState 10
+push totalTall
+push totalShort
+push totalSolar
+push counter
+push peakTall
+push peakShort
+push peakSolar
+mul sp currState 10
+add sp sp 7
+pop peakSolar
+pop peakShort
+pop peakTall
+pop counter
+pop totalSolar
+pop totalShort
+pop totalTall
 j ra
