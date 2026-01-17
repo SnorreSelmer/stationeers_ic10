@@ -1,5 +1,5 @@
 # This script is meant as an early-game helper.
-# It automatically fills a tank with filtered airgas from a Filtration unit
+# It automatically fills a tank with filtered gas from a Filtration unit
 # until a safe target pressure is reached, taking into account temperature.
 
 alias tankTemp r15
