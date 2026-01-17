@@ -1,0 +1,21 @@
+# This script is meant as an early-game helper.
+# It automatically fills a tank with filtered airgas from a Filtration unit
+# until a safe target pressure is reached, taking into account temperature.
+
+alias tankTemp r15
+alias tankPressure r14
+alias fillActivate r13
+alias filter db
+
+define targetPressure 8000 # in  kPa, most tanks have a max of 10MPa, 8MPa is a safe target
+define targetTemp 293 # ~20 Celsius in Kelvin
+
+start:
+yield
+l tankTemp filter TemperatureOutput
+l tankPressure filter PressureOutput
+div fillActivate tankPressure tankTemp
+mul fillActivate fillActivate targetTemp
+slt fillActivate fillActivate targetPressure
+s filter Mode fillActivate
+j start
