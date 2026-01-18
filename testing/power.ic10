@@ -8,36 +8,30 @@ alias peakTallDisplay d3
 alias peakShortDisplay d4
 alias peakSolarDisplay d5
 
-alias totalTall r0
-alias totalShort r1
-alias totalSolar r2
-alias counter r3
-alias peakTall r4
-alias peakShort r5
-alias peakSolar r6
-alias averageTall r7
-alias averageShort r8
-alias averageSolar r9
-alias currState r10
-alias prevState r11
+alias totalTall r15
+alias totalShort r14
+alias totalSolar r13
+alias counter r12
+alias peakTall r11
+alias peakShort r10
+alias peakSolar r9
+alias currState r8
 
-move r0 0
-move r1 0
-move r2 0
-move r3 0
-move r4 0
+move totalTall 0
+move totalShort 0
+move totalSolar 0
+move counter 0
+move peakTall 0
+move peakShort 0
+move peakSolar 0
+move currState 0
 move r5 0
-move r6 0
-move r7 0
-move r8 0
-move r9 0
-move r10 0
-move r11 0
 
-define tall -2082355173 # ID of tall wind turbine
-define short 1622183451 # ID of short wind turbine
-define solar -934345724 # ID of heavy solar panel
-define weather 1997212478 # ID of weather station
+define tall -2082355173
+define short 1622183451
+define solar -934345724
+define weather 1997212478
+define daysense 1076425094
 
 s averageShortDisplay Mode 2
 s averageTallDisplay Mode 2
@@ -46,61 +40,60 @@ s peakTallDisplay Mode 2
 s peakShortDisplay Mode 2
 s peakSolarDisplay Mode 2
 
+startPoint:
+yield
+lb r6 daysense SolarAngle Maximum
+bgtal r6 r5 updatePoint
+sgt r4 r6 r5
+s db Setting r4
+blt r6 r5 start
+j startPoint
+
+updatePoint:
+move r5 r6
+j ra
+
 start:
 yield
 lb currState weather Mode Maximum
-seq currState currState 2
-bneal currState prevState changePlaces
-lb r13 tall PowerGeneration Maximum
-add totalTall totalTall r13
-lb r14 short PowerGeneration Maximum
-add totalShort totalShort r14
-lb r15 solar Charge Maximum
-add totalSolar totalSolar r15
+blt currState 2 start # Comment this out to track normal weather
+beq currState 2 start # Comment this out to track storms
+lb r0 tall PowerGeneration Maximum
+add totalTall totalTall r0
+bgtal r0 peakTall updatePeakTall
+lb r0 short PowerGeneration Maximum
+add totalShort totalShort r0
+bgtal r0 peakShort updatePeakShort
+lb r0 solar Charge Maximum
+add totalSolar totalSolar r0
+bgtal r0 peakSolar updatePeakSolar
 add counter counter 1
-div averageTall totalTall counter
-div averageShort totalShort counter
-div averageSolar totalSolar counter
-bgtal r13 peakTall startPeakTall
-bgtal r14 peakShort startPeakShort
-bgtal r15 peakSolar startPeakSolar
-s averageTallDisplay Setting averageTall
-s averageShortDisplay Setting averageShort
-s averageSolarDisplay Setting averageSolar
+s db Setting counter
+lb r6 daysense SolarAngle Maximum
+bgtal r6 r5 updateDisplays
+move r5 r6
+j start
+
+updatePeakTall:
+move peakTall r0
+j ra
+
+updatePeakShort:
+move peakShort r0
+j ra
+
+updatePeakSolar:
+move peakSolar r0
+j ra
+
+updateDisplays:
+div r7 totalTall counter
+s averageTallDisplay Setting r7
+div r7 totalShort counter
+s averageShortDisplay Setting r7
+div r7 totalSolar counter
+s averageSolarDisplay Setting r7
 s peakTallDisplay Setting peakTall
 s peakShortDisplay Setting peakShort
 s peakSolarDisplay Setting peakSolar
-move prevState currState
-j start
-
-startPeakTall:
-move peakTall r13
-j ra
-
-startPeakShort:
-move peakShort r14
-j ra
-
-startPeakSolar:
-move peakSolar r15
-j ra
-
-changePlaces:
-mul sp prevState 10
-push totalTall
-push totalShort
-push totalSolar
-push counter
-push peakTall
-push peakShort
-push peakSolar
-mul sp currState 10
-add sp sp 7
-pop peakSolar
-pop peakShort
-pop peakTall
-pop counter
-pop totalSolar
-pop totalShort
-pop totalTall
 j ra
