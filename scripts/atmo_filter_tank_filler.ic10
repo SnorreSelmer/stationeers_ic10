@@ -7,7 +7,7 @@ alias tankPressure r14
 alias fillActivate r13
 alias filter db
 
-define targetPressure 8000 # in  kPa, most tanks have a max of 10MPa, 8MPa is a safe target
+define targetPressure 8000 # in  kPa, most tanks have max at 10MPa, 8MPa is a safe target
 define targetTemp 293 # ~20 Celsius in Kelvin
 
 start:
